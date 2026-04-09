@@ -90,6 +90,15 @@ async def test_url_query_params_partial_matching(httpx_mock: HTTPXMock) -> None:
 
 
 @pytest.mark.asyncio
+async def test_url_as_pattern_ignoring_query_parameters(httpx_mock: HTTPXMock):
+    httpx_mock.add_response(url=re.compile("https://test_url/something.*"))
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get("https://test_url/something?a=1&b=2")
+        assert response.content == b""
+
+
+@pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
 async def test_url_query_params_with_single_value_list(httpx_mock: HTTPXMock) -> None:
     httpx_mock.add_response(
@@ -1276,8 +1285,7 @@ def test_request_retrieval_with_more_than_one(testdir: Testdir) -> None:
     """
     Single request cannot be returned if there is more than one matching.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
         
@@ -1291,8 +1299,7 @@ def test_request_retrieval_with_more_than_one(testdir: Testdir) -> None:
                 await client.get("https://test_url", headers={"X-TEST": "test header 2"})
         
             httpx_mock.get_request(url=httpx.URL("https://test_url"))
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(failed=1)
     result.stdout.fnmatch_lines(

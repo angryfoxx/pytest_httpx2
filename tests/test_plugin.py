@@ -3,8 +3,7 @@ from pytest import Testdir
 
 def test_fixture_is_available(testdir: Testdir) -> None:
     # create a temporary pytest test file
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         
         
@@ -13,8 +12,7 @@ def test_fixture_is_available(testdir: Testdir) -> None:
             r = httpx.get("https://foo.tld")
             assert httpx_mock.get_request() is not None
 
-    """
-    )
+    """)
 
     # run all tests with pytest
     result = testdir.runpytest()
@@ -25,12 +23,10 @@ def test_httpx_mock_unused_response(testdir: Testdir) -> None:
     """
     Unused responses should fail test case.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         def test_httpx_mock_unused_response(httpx_mock):
             httpx_mock.add_response()
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, passed=1)
     result.stdout.fnmatch_lines(
@@ -49,15 +45,13 @@ def test_httpx_mock_unused_response_without_assertion(testdir: Testdir) -> None:
     Unused responses should not fail test case if
     assert_all_responses_were_requested option is set to False.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import pytest
 
         @pytest.mark.httpx_mock(assert_all_responses_were_requested=False)
         def test_httpx_mock_unused_response_without_assertion(httpx_mock):
             httpx_mock.add_response()
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
 
@@ -66,16 +60,14 @@ def test_httpx_mock_unused_callback(testdir: Testdir) -> None:
     """
     Unused callbacks should fail test case.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         def test_httpx_mock_unused_callback(httpx_mock):
             def unused(*args, **kwargs):
                 pass
         
             httpx_mock.add_callback(unused)
 
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, passed=1)
     result.stdout.fnmatch_lines(
@@ -94,8 +86,7 @@ def test_httpx_mock_unused_callback_without_assertion(testdir: Testdir) -> None:
     Unused callbacks should not fail test case if
     assert_all_responses_were_requested option is set to False.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import pytest
 
         @pytest.mark.httpx_mock(assert_all_responses_were_requested=False)
@@ -105,8 +96,7 @@ def test_httpx_mock_unused_callback_without_assertion(testdir: Testdir) -> None:
         
             httpx_mock.add_callback(unused)
 
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
 
@@ -116,8 +106,7 @@ def test_httpx_mock_unexpected_request(testdir: Testdir) -> None:
     Unexpected request should fail test case if
     assert_all_requests_were_expected option is set to True (default).
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -126,8 +115,7 @@ def test_httpx_mock_unexpected_request(testdir: Testdir) -> None:
                 # Non mocked request
                 with pytest.raises(httpx.TimeoutException):
                     client.get("https://foo.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, passed=1)
     result.stdout.fnmatch_lines(
@@ -146,8 +134,7 @@ def test_httpx_mock_unexpected_request_without_assertion(testdir: Testdir) -> No
     Unexpected request should not fail test case if
     assert_all_requests_were_expected option is set to False.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -157,8 +144,7 @@ def test_httpx_mock_unexpected_request_without_assertion(testdir: Testdir) -> No
                 # Non mocked request
                 with pytest.raises(httpx.TimeoutException):
                     client.get("https://foo.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
 
@@ -168,8 +154,7 @@ def test_httpx_mock_already_matched_response(testdir: Testdir) -> None:
     Already matched response should fail test case if
     can_send_already_matched_responses option is set to False (default).
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -180,8 +165,7 @@ def test_httpx_mock_already_matched_response(testdir: Testdir) -> None:
                 # Non mocked (already matched) request
                 with pytest.raises(httpx.TimeoutException):
                     client.get("https://foo.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, passed=1)
     result.stdout.fnmatch_lines(
@@ -200,8 +184,7 @@ def test_httpx_mock_reusing_matched_response(testdir: Testdir) -> None:
     Already matched response should not fail test case if
     can_send_already_matched_responses option is set to True.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -212,8 +195,7 @@ def test_httpx_mock_reusing_matched_response(testdir: Testdir) -> None:
                 client.get("https://foo.tld")
                 # Reusing response
                 client.get("https://foo.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
 
@@ -221,8 +203,7 @@ def test_httpx_mock_reusing_matched_response(testdir: Testdir) -> None:
 def test_httpx_mock_unmatched_request_without_responses(
     testdir: Testdir,
 ) -> None:
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -232,8 +213,7 @@ def test_httpx_mock_unmatched_request_without_responses(
                 client.get("https://foo22.tld")
                 # This code will not be reached
                 client.get("https://foo3.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, failed=1)
     # Assert the error that occurred
@@ -258,8 +238,7 @@ def test_httpx_mock_unmatched_request_without_responses(
 def test_httpx_mock_unmatched_request_with_only_unmatched_responses(
     testdir: Testdir,
 ) -> None:
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -274,8 +253,7 @@ def test_httpx_mock_unmatched_request_with_only_unmatched_responses(
                 client.get("https://foo22.tld")
                 # This code will not be reached
                 client.get("https://foo3.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, failed=1)
     # Assert the error that occurred
@@ -303,8 +281,7 @@ def test_httpx_mock_unmatched_request_with_only_unmatched_responses(
 def test_httpx_mock_unmatched_request_with_only_unmatched_reusable_responses(
     testdir: Testdir,
 ) -> None:
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -320,8 +297,7 @@ def test_httpx_mock_unmatched_request_with_only_unmatched_reusable_responses(
                 client.get("https://foo22.tld")
                 # This code will not be reached
                 client.get("https://foo3.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, failed=1)
     # Assert the error that occurred
@@ -349,8 +325,7 @@ def test_httpx_mock_unmatched_request_with_only_unmatched_reusable_responses(
 def test_httpx_mock_unmatched_request_with_only_matched_responses(
     testdir: Testdir,
 ) -> None:
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -367,8 +342,7 @@ def test_httpx_mock_unmatched_request_with_only_matched_responses(
                 client.get("https://foo22.tld")
                 # This code will not be reached
                 client.get("https://foo3.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, failed=1)
     # Assert the error that occurred
@@ -397,8 +371,7 @@ def test_httpx_mock_unmatched_request_with_only_matched_responses(
 def test_httpx_mock_unmatched_request_with_only_matched_reusable_responses(
     testdir: Testdir,
 ) -> None:
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -417,8 +390,7 @@ def test_httpx_mock_unmatched_request_with_only_matched_reusable_responses(
                 client.get("https://foo22.tld")
                 # This code will not be reached
                 client.get("https://foo3.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, failed=1)
     # Assert the error that occurred
@@ -445,8 +417,7 @@ def test_httpx_mock_unmatched_request_with_only_matched_reusable_responses(
 def test_httpx_mock_unmatched_request_with_matched_and_unmatched_responses(
     testdir: Testdir,
 ) -> None:
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -467,8 +438,7 @@ def test_httpx_mock_unmatched_request_with_matched_and_unmatched_responses(
                 client.get("https://foo22.tld")
                 # This code will not be reached
                 client.get("https://foo3.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, failed=1)
     # Assert the error that occurred
@@ -500,8 +470,7 @@ def test_httpx_mock_unmatched_request_with_matched_and_unmatched_responses(
 def test_httpx_mock_unmatched_request_with_matched_and_unmatched_reusable_responses(
     testdir: Testdir,
 ) -> None:
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -524,8 +493,7 @@ def test_httpx_mock_unmatched_request_with_matched_and_unmatched_reusable_respon
                 client.get("https://foo3.tld")
                 # This code will not be reached
                 client.get("https://foo2.tld")
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, failed=1)
     # Assert the error that occurred
@@ -556,8 +524,7 @@ def test_httpx_mock_should_mock_sync(testdir: Testdir) -> None:
     """
     Non mocked requests should go through while other requests should be mocked.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -576,8 +543,7 @@ def test_httpx_mock_should_mock_sync(testdir: Testdir) -> None:
             # Assert that a single request was mocked
             assert len(httpx_mock.get_requests()) == 1
             
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
 
@@ -586,8 +552,7 @@ def test_httpx_mock_should_mock_async(testdir: Testdir) -> None:
     """
     Non mocked requests should go through while other requests should be mocked.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -607,8 +572,7 @@ def test_httpx_mock_should_mock_async(testdir: Testdir) -> None:
             # Assert that a single request was mocked
             assert len(httpx_mock.get_requests()) == 1
             
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
 
@@ -621,18 +585,15 @@ def test_httpx_mock_options_on_multi_levels_are_aggregated(testdir: Testdir) -> 
     module: assert_all_requests_were_expected (tested by not mocking one URL)
     test: should_mock (tested by calling 3 URls, 2 mocked, the other one not)
     """
-    testdir.makeconftest(
-        """
+    testdir.makeconftest("""
         import pytest
 
 
         def pytest_collection_modifyitems(session, config, items):
             for item in items:
                 item.add_marker(pytest.mark.httpx_mock(assert_all_responses_were_requested=False))
-    """
-    )
-    testdir.makepyfile(
-        """
+    """)
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -662,8 +623,7 @@ def test_httpx_mock_options_on_multi_levels_are_aggregated(testdir: Testdir) -> 
             # Assert that 2 requests out of 3 were mocked 
             assert len(httpx_mock.get_requests()) == 2
             
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
 
@@ -672,16 +632,14 @@ def test_invalid_marker(testdir: Testdir) -> None:
     """
     Unknown marker keyword arguments should raise a TypeError.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import pytest
 
         @pytest.mark.httpx_mock(foo=123)
         def test_invalid_marker(httpx_mock):
             pass
             
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1)
     result.stdout.re_match_lines([r".*got an unexpected keyword argument 'foo'"])
@@ -691,8 +649,7 @@ def test_mandatory_response_not_matched(testdir: Testdir) -> None:
     """
     is_optional MUST take precedence over assert_all_responses_were_requested.
     """
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
         import pytest
 
@@ -703,8 +660,7 @@ def test_mandatory_response_not_matched(testdir: Testdir) -> None:
             # This response MUST be requested
             httpx_mock.add_response(url="https://test_url2", is_optional=False)
             
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, passed=1)
     # Assert the teardown assertion failure
@@ -720,15 +676,13 @@ def test_mandatory_response_not_matched(testdir: Testdir) -> None:
 
 
 def test_reusable_response_not_matched(testdir: Testdir) -> None:
-    testdir.makepyfile(
-        """
+    testdir.makepyfile("""
         import httpx
 
         def test_reusable_response_not_matched(httpx_mock):
             httpx_mock.add_response(url="https://test_url2", is_reusable=True)
             
-    """
-    )
+    """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, passed=1)
     # Assert the teardown assertion failure

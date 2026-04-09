@@ -9,10 +9,10 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
 authors = [
-    { name = "Colin Bounouar", email = "colin.bounouar.dev@gmail.com" },
+    { name = "Colin Bounouar", email = "github.coping055@passinbox.com" },
 ]
 maintainers = [
-    { name = "Colin Bounouar", email = "colin.bounouar.dev@gmail.com" },
+    { name = "Colin Bounouar", email = "github.coping055@passinbox.com" },
 ]
 keywords = [
     "httpx",
