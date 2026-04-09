@@ -11,16 +11,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6.0.2
     - name: Set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v6.2.0
       with:
         python-version: '3.14'
     - name: Create packages
       run: |
-        python -m pip install build
+        python -m pip install pip==26.0.1
+        python -m pip install build==1.4.2
         python -m build .
     - name: Publish packages
       run: |
-        python -m pip install twine
+        python -m pip install twine==6.2.0
         python -m twine upload dist/* --skip-existing --username __token__ --password ${{ secrets.pypi_password }}
