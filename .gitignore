@@ -111,3 +111,8 @@ ENV/
 .idea/
 .pypirc
 pip.ini
+
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+uv.lock
