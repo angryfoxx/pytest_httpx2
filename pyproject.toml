@@ -79,7 +79,11 @@ show_missing = true
 patch = ["subprocess"]
 
 [tool.pytest]
-addopts = ["--cov=pytest_httpx2", "--runpytest=subprocess"]
+addopts = [
+  "--cov-report=xml",
+  "--cov=pytest_httpx2",
+  "--runpytest=subprocess",
+]
 asyncio_mode = "auto"
 
 [tool.ruff]
