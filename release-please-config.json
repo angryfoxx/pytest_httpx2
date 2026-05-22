@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    ".": {
+      "changelog-path": "CHANGELOG.md",
+      "include-component-in-tag": false,
+      "package-name": "httpx2-pytest",
+      "release-as": "1.0.0",
+      "release-type": "python"
+    }
+  },
+  "changelog-sections": [
+    { "type": "feat", "section": "Added" },
+    { "type": "fix", "section": "Fixed" },
+    { "type": "perf", "section": "Changed" },
+    { "type": "revert", "section": "Changed" },
+    { "type": "deps", "section": "Changed" },
+    { "type": "docs", "section": "Changed" },
+    { "type": "refactor", "section": "Changed" },
+    { "type": "chore", "section": "Changed", "hidden": true },
+    { "type": "style", "section": "Changed", "hidden": true },
+    { "type": "test", "section": "Changed", "hidden": true },
+    { "type": "build", "section": "Changed", "hidden": true },
+    { "type": "ci", "section": "Changed", "hidden": true }
+  ],
+  "pull-request-title-pattern": "chore${scope}: release httpx2-pytest ${version}",
+  "include-v-in-tag": true
+}

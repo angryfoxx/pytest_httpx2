@@ -3,6 +3,8 @@
 Distribution name on PyPI: **httpx2-pytest**
 Import name: **pytest_httpx2**
 
+Releases are automated with [release-please](https://github.com/googleapis/release-please).
+
 ## One-time PyPI setup (trusted publishing)
 
 Configure [PyPI trusted publishers](https://docs.pypi.org/trusted-publishers/) so GitHub Actions can upload releases without API tokens.
@@ -23,23 +25,25 @@ Configure [PyPI trusted publishers](https://docs.pypi.org/trusted-publishers/) s
 
 4. In this GitHub repository, create an environment named **`pypi`** (Settings → Environments). No secrets are required when using trusted publishing.
 
-## Version number
+## First release (1.0.0)
 
-Set the release version in `pytest_httpx2/version.py` (`__version__`) before tagging.
+Version **1.0.0** is not on PyPI yet. `release-please-config.json` sets `"release-as": "1.0.0"` so the first Release Please PR targets that version. **Remove `release-as` after `v1.0.0` is published**; later releases use conventional commits only.
 
-## Release checklist
+The manifest (`.release-please-manifest.json`) starts empty so release-please does not treat `1.0.0` as already released.
 
-1. Update `CHANGELOG.md` (move **Unreleased** notes under a dated version heading).
-2. Bump `pytest_httpx2/version.py`.
-3. Commit on `master` (or your release branch).
-4. Tag and push:
+## How releases work
 
-```shell
-git tag v1.0.0
-git push origin v1.0.0
-```
+1. Merge changes into **`master`** using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`, etc.).
+2. Run the [Release Please workflow](.github/workflows/release-please.yml) on `master` (workflow dispatch only):
 
-5. The [Release workflow](.github/workflows/release.yml) builds the sdist/wheel, runs `twine check`, and publishes with `uv publish`.
+   ```shell
+   gh workflow run release-please.yml --ref master
+   ```
+
+   It opens or updates a release PR that bumps `pytest_httpx2/version.py`, `CHANGELOG.md`, and `.release-please-manifest.json`.
+3. Review and merge the release PR on `master`.
+4. Release Please creates a GitHub release and tag (for example `v1.1.0`).
+5. The [Release workflow](.github/workflows/release.yml) runs on `release: published`, builds the sdist/wheel, runs `twine check`, and publishes with `uv publish`.
 6. Confirm the release: https://pypi.org/project/httpx2-pytest/
 
 ## Local build verification

@@ -2,9 +2,8 @@
 name: Publish Python distribution to PyPI
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -13,6 +12,8 @@ jobs:
     steps:
       # actions/checkout v6.0.2
       - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        with:
+          ref: ${{ github.event.release.tag_name }}
       # astral-sh/setup-uv v8.1.0
       - name: Install uv
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
@@ -38,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/project/httpx2-pytest/${{ github.ref_name }}
+      url: https://pypi.org/project/httpx2-pytest/
     permissions:
       id-token: write
     steps:

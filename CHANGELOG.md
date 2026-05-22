@@ -4,18 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-## [1.0.0] - 2026-05-22
-### Changed
-- Published as [`httpx2-pytest`](https://pypi.org/project/httpx2-pytest/) with import package `pytest_httpx2` (fork of pytest-httpx for HTTPX2).
-- Requires [`httpx2`](https://github.com/pydantic/httpx2)==2.\* instead of [`httpx`](https://www.python-httpx.org).
-- Documentation and examples now target HTTPX2 (`import httpx2`); the `httpx_mock` fixture name is unchanged.
-
-### Fixed
-- `match_params` is now handling `bool`, `int` and `float` values in addition to `str`. Only str values were previously expected.
-- A meaningful error will now be returned when a callback that does not return an `httpx2.Response` is called.
-
 ## [0.36.2] - 2026-04-09
 ### Fixed
 - Document how to ignore query parameters while matching on URL.
@@ -439,8 +427,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First release, should be considered as unstable for now as design might change.
 
-[Unreleased]: https://github.com/angryfoxx/pytest_httpx2/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.36.2...v1.0.0
 [0.36.2]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.36.0...0.36.2
 [0.36.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.35.0...v0.36.0
 [0.35.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.34.0...v0.35.0
