@@ -12,6 +12,7 @@
   },
   "changelog-sections": [
     { "type": "feat", "section": "Added" },
+    { "type": "deps", "section": "Changed" },
     { "type": "fix", "section": "Fixed" },
     { "type": "perf", "section": "Changed" },
     { "type": "revert", "section": "Changed" },

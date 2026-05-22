@@ -43,6 +43,7 @@ Title should be a small sentence describing the request.
 6) Add at least one [`pytest`](https://doc.pytest.org/en/latest/index.html) test case.
     * Unless it is an internal refactoring request or a documentation update.
 7) Use [Conventional Commits](https://www.conventionalcommits.org/) in PR titles and commit messages (`feat:`, `fix:`, `docs:`, `chore:`, etc.). [release-please](https://github.com/googleapis/release-please) updates `CHANGELOG.md` when maintainers merge the release PR on `master`.
+    * Breaking changes must use `type(scope)!:` (for example `feat(httpx2)!: …`), not `type!(scope):` — release-please cannot parse the latter.
 
 ## Releasing
 
