@@ -1,6 +1,6 @@
 from typing import Callable
 
-import httpx
+import httpx2
 
 
 class _HTTPXMockOptions:
@@ -10,7 +10,7 @@ class _HTTPXMockOptions:
         assert_all_responses_were_requested: bool = True,
         assert_all_requests_were_expected: bool = True,
         can_send_already_matched_responses: bool = False,
-        should_mock: Callable[[httpx.Request], bool] = lambda request: True,
+        should_mock: Callable[[httpx2.Request], bool] = lambda request: True,
     ) -> None:
         self.assert_all_responses_were_requested = assert_all_responses_were_requested
         self.assert_all_requests_were_expected = assert_all_requests_were_expected

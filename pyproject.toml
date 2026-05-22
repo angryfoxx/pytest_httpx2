@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools", "setuptools_scm"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pytest-httpx"
-description = "Send responses to httpx."
+name = "pytest-httpx2"
+description = "Send responses to httpx2."
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
@@ -15,7 +15,7 @@ maintainers = [
     { name = "Colin Bounouar", email = "github.coping055@passinbox.com" },
 ]
 keywords = [
-    "httpx",
+    "httpx2",
     "pytest",
     "testing",
 ]
@@ -37,16 +37,17 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "httpx==0.28.*",
+    "httpx2==2.*",
     "pytest==9.*",
 ]
 dynamic = ["version"]
 
 [project.urls]
-documentation = "https://colin-b.github.io/pytest_httpx/"
-repository = "https://github.com/Colin-b/pytest_httpx"
-changelog = "https://github.com/Colin-b/pytest_httpx/blob/master/CHANGELOG.md"
-issues = "https://github.com/Colin-b/pytest_httpx/issues"
+Homepage = "https://github.com/angryfoxx/pytest_httpx2"
+Documentation = "https://github.com/angryfoxx/pytest_httpx2#readme"
+Repository = "https://github.com/angryfoxx/pytest_httpx2"
+Changelog = "https://github.com/angryfoxx/pytest_httpx2/blob/master/CHANGELOG.md"
+Issues = "https://github.com/angryfoxx/pytest_httpx2/issues"
 
 [project.optional-dependencies]
 testing = [
@@ -57,14 +58,22 @@ testing = [
 ]
 
 [project.entry-points.pytest11]
-pytest_httpx = "pytest_httpx"
+pytest_httpx2 = "pytest_httpx2"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pytest_httpx2*"]
 
 [tool.setuptools.dynamic]
-version = {attr = "pytest_httpx.version.__version__"}
+version = {attr = "pytest_httpx2.version.__version__"}
 
 [tool.pytest]
-# Silence deprecation warnings about option "asyncio_default_fixture_loop_scope"
-asyncio_default_fixture_loop_scope = "function"
+asyncio_mode = "auto"
+addopts = ["--cov=pytest_httpx2", "--runpytest=subprocess"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
 
 [tool.coverage.run]
 patch = ["subprocess"]

@@ -1,16 +1,16 @@
 from typing import Union
 
-import httpx
+import httpx2
 
-from pytest_httpx._httpx_internals import _proxy_url
-from pytest_httpx._request_matcher import _RequestMatcher
+from pytest_httpx2._httpx_internals import _proxy_url
+from pytest_httpx2._request_matcher import _RequestMatcher
 
 
 class RequestDescription:
     def __init__(
         self,
-        real_transport: Union[httpx.BaseTransport, httpx.AsyncBaseTransport],
-        request: httpx.Request,
+        real_transport: Union[httpx2.BaseTransport, httpx2.AsyncBaseTransport],
+        request: httpx2.Request,
         matchers: list[_RequestMatcher],
     ):
         self.real_transport = real_transport
@@ -18,7 +18,7 @@ class RequestDescription:
 
         headers_encoding = request.headers.encoding
         self.expected_headers = {
-            # httpx uses lower cased header names as internal key
+            # httpx2 uses lower cased header names as internal key
             header.lower().encode(headers_encoding)
             for matcher in matchers
             if matcher.headers
@@ -44,8 +44,8 @@ class RequestDescription:
 
         if self.expected_headers:
             headers_encoding = self.request.headers.encoding
-            present_headers = {}
-            # Can be cleaned based on the outcome of https://github.com/encode/httpx/discussions/2841
+            present_headers: dict = {}
+            # Can be cleaned based on the outcome of upstream header matching discussions
             for name, lower_name, value in self.request.headers._list:
                 if lower_name in self.expected_headers:
                     name = name.decode(headers_encoding)

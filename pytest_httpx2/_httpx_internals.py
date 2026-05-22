@@ -2,15 +2,15 @@ import base64
 from typing import Union, Optional
 from collections.abc import Sequence, Iterable, AsyncIterator, Iterator
 
-import httpcore
-import httpx
+import httpcore2 as httpcore
+import httpx2
 
 # TODO Get rid of this internal import
-from httpx._content import IteratorByteStream, AsyncIteratorByteStream
+from httpx2._content import IteratorByteStream, AsyncIteratorByteStream
 
-# Those types are internally defined within httpx._types
+# Those types are internally defined within httpx2._types
 HeaderTypes = Union[
-    httpx.Headers,
+    httpx2.Headers,
     dict[str, str],
     dict[bytes, bytes],
     Sequence[tuple[str, str]],
@@ -32,10 +32,10 @@ class IteratorStream(AsyncIteratorByteStream, IteratorByteStream):
         IteratorByteStream.__init__(self, stream=Stream())
 
 
-def _to_httpx_url(url: httpcore.URL, headers: list[tuple[bytes, bytes]]) -> httpx.URL:
+def _to_httpx_url(url: httpcore.URL, headers: list[tuple[bytes, bytes]]) -> httpx2.URL:
     for name, value in headers:
         if b"Proxy-Authorization" == name:
-            return httpx.URL(
+            return httpx2.URL(
                 scheme=url.scheme.decode(),
                 host=url.host.decode(),
                 port=url.port,
@@ -43,7 +43,7 @@ def _to_httpx_url(url: httpcore.URL, headers: list[tuple[bytes, bytes]]) -> http
                 userinfo=base64.b64decode(value[6:]),
             )
 
-    return httpx.URL(
+    return httpx2.URL(
         scheme=url.scheme.decode(),
         host=url.host.decode(),
         port=url.port,
@@ -52,8 +52,8 @@ def _to_httpx_url(url: httpcore.URL, headers: list[tuple[bytes, bytes]]) -> http
 
 
 def _proxy_url(
-    real_transport: Union[httpx.HTTPTransport, httpx.AsyncHTTPTransport],
-) -> Optional[httpx.URL]:
+    real_transport: Union[httpx2.HTTPTransport, httpx2.AsyncHTTPTransport],
+) -> Optional[httpx2.URL]:
     if isinstance(
         real_pool := real_transport._pool, (httpcore.HTTPProxy, httpcore.AsyncHTTPProxy)
     ):

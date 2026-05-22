@@ -3,17 +3,34 @@ import re
 from typing import Optional, Union, Any
 from re import Pattern
 
-import httpx
-from httpx import QueryParams
+import httpx2
+from httpx2 import QueryParams
 
-from pytest_httpx._httpx_internals import _proxy_url
-from pytest_httpx._options import _HTTPXMockOptions
+from pytest_httpx2._httpx_internals import _proxy_url, PrimitiveData
+from pytest_httpx2._options import _HTTPXMockOptions
+
+
+def convert_back_mock_any(original: dict, new: dict) -> None:
+    """
+    As mock.ANY was converted to "<ANY>" by httpx2, we set back the value to mock.ANY when needed.
+    """
+    for key, values in original.items():
+        if values is ANY:
+            new[key] = ANY
+        elif isinstance(values, list):
+            if len(values) == 1:
+                if values[0] is ANY:
+                    new[key] = ANY
+            else:
+                for index, value in enumerate(values):
+                    if value is ANY:
+                        new[key][index] = ANY
 
 
 def _url_match(
-    url_to_match: Union[Pattern[str], httpx.URL],
-    received: httpx.URL,
-    params: Optional[dict[str, Union[str | list[str]]]],
+    url_to_match: Union[Pattern[str], httpx2.URL],
+    received: httpx2.URL,
+    params: Optional[dict[str, Union[PrimitiveData, Sequence[PrimitiveData]]]],
 ) -> bool:
     if isinstance(url_to_match, re.Pattern):
         return url_to_match.match(str(received)) is not None
@@ -43,9 +60,9 @@ class _RequestMatcher:
     def __init__(
         self,
         options: _HTTPXMockOptions,
-        url: Optional[Union[str, Pattern[str], httpx.URL]] = None,
+        url: Optional[Union[str, Pattern[str], httpx2.URL]] = None,
         method: Optional[str] = None,
-        proxy_url: Optional[Union[str, Pattern[str], httpx.URL]] = None,
+        proxy_url: Optional[Union[str, Pattern[str], httpx2.URL]] = None,
         match_headers: Optional[dict[str, Any]] = None,
         match_content: Optional[bytes] = None,
         match_json: Optional[Any] = None,
@@ -58,7 +75,7 @@ class _RequestMatcher:
     ):
         self._options = options
         self.nb_calls = 0
-        self.url = httpx.URL(url) if url and isinstance(url, str) else url
+        self.url = httpx2.URL(url) if url and isinstance(url, str) else url
         self.method = method.upper() if method else method
         self.headers = match_headers
         self.content = match_content
@@ -67,7 +84,7 @@ class _RequestMatcher:
         self.files = match_files
         self.params = match_params
         self.proxy_url = (
-            httpx.URL(proxy_url)
+            httpx2.URL(proxy_url)
             if proxy_url and isinstance(proxy_url, str)
             else proxy_url
         )
@@ -93,7 +110,7 @@ class _RequestMatcher:
             raise ValueError("URL must be provided when match_params is used.")
         if self.params and isinstance(self.url, re.Pattern):
             raise ValueError(
-                "match_params cannot be used in addition to regex URL. Request this feature via https://github.com/Colin-b/pytest_httpx/issues/new?title=Regex%20URL%20should%20allow%20match_params&body=Hi,%20I%20need%20a%20regex%20to%20match%20the%20non%20query%20part%20of%20the%20URL%20only"
+                "match_params cannot be used in addition to regex URL. Request this feature via https://github.com/angryfoxx/pytest_httpx2/issues/new?title=Regex%20URL%20should%20allow%20match_params&body=Hi,%20I%20need%20a%20regex%20to%20match%20the%20non%20query%20part%20of%20the%20URL%20only"
             )
         if self._is_matching_params_more_than_one_way():
             raise ValueError(
@@ -124,7 +141,7 @@ class _RequestMatcher:
     def _is_matching_params_more_than_one_way(self) -> bool:
         url_has_params = (
             bool(self.url.params)
-            if (self.url and isinstance(self.url, httpx.URL))
+            if (self.url and isinstance(self.url, httpx2.URL))
             else False
         )
         matching_ways = [
@@ -135,8 +152,8 @@ class _RequestMatcher:
 
     def match(
         self,
-        real_transport: Union[httpx.HTTPTransport, httpx.AsyncHTTPTransport],
-        request: httpx.Request,
+        real_transport: Union[httpx2.HTTPTransport, httpx2.AsyncHTTPTransport],
+        request: httpx2.Request,
     ) -> bool:
         return (
             self._url_match(request)
@@ -147,25 +164,25 @@ class _RequestMatcher:
             and self._extensions_match(request)
         )
 
-    def _url_match(self, request: httpx.Request) -> bool:
+    def _url_match(self, request: httpx2.Request) -> bool:
         if not self.url:
             return True
 
         return _url_match(self.url, request.url, self.params)
 
-    def _method_match(self, request: httpx.Request) -> bool:
+    def _method_match(self, request: httpx2.Request) -> bool:
         if not self.method:
             return True
 
         return request.method == self.method
 
-    def _headers_match(self, request: httpx.Request) -> bool:
+    def _headers_match(self, request: httpx2.Request) -> bool:
         if not self.headers:
             return True
 
         encoding = request.headers.encoding
-        request_headers = {}
-        # Can be cleaned based on the outcome of https://github.com/encode/httpx/discussions/2841
+        request_headers: dict = {}
+        # Can be cleaned based on the outcome of upstream header matching discussions
         for raw_name, raw_value in request.headers.raw:
             if raw_name in request_headers:
                 request_headers[raw_name] += b", " + raw_value
@@ -178,13 +195,13 @@ class _RequestMatcher:
             for header_name, header_value in self.headers.items()
         )
 
-    def _content_match(self, request: httpx.Request) -> bool:
+    def _content_match(self, request: httpx2.Request) -> bool:
         if self.content is not None:
             return request.content == self.content
 
         if self.json is not None:
             try:
-                # httpx._content.encode_json hard codes utf-8 encoding.
+                # httpx2 encodes JSON bodies as utf-8.
                 return json.loads(request.content.decode("utf-8")) == self.json
             except json.decoder.JSONDecodeError:
                 return False
@@ -196,8 +213,8 @@ class _RequestMatcher:
                 return False
             # Ensure we re-use the same boundary for comparison
             boundary = boundary_matched.group(1)
-            # Prevent internal httpx changes from impacting users not matching on files
-            from httpx._multipart import MultipartStream
+            # Prevent internal httpx2 changes from impacting users not matching on files
+            from httpx2._multipart import MultipartStream
 
             multipart_content = b"".join(
                 MultipartStream(self.data or {}, self.files, boundary)
@@ -207,7 +224,7 @@ class _RequestMatcher:
         return True
 
     def _proxy_match(
-        self, real_transport: Union[httpx.HTTPTransport, httpx.AsyncHTTPTransport]
+        self, real_transport: Union[httpx2.HTTPTransport, httpx2.AsyncHTTPTransport]
     ) -> bool:
         if not self.proxy_url:
             return True
@@ -217,7 +234,7 @@ class _RequestMatcher:
 
         return False
 
-    def _extensions_match(self, request: httpx.Request) -> bool:
+    def _extensions_match(self, request: httpx2.Request) -> bool:
         if not self.extensions:
             return True
 

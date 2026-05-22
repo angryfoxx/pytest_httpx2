@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-22
+### Changed
+- Published as [`pytest-httpx2`](https://pypi.org/project/pytest-httpx2/) with import package `pytest_httpx2` (fork of pytest-httpx for HTTPX2).
+- Requires [`httpx2`](https://github.com/pydantic/httpx2)==2.\* instead of [`httpx`](https://www.python-httpx.org).
+- Documentation and examples now target HTTPX2 (`import httpx2`); the `httpx_mock` fixture name is unchanged.
+
+### Fixed
+- `match_params` is now handling `bool`, `int` and `float` values in addition to `str`. Only str values were previously expected.
+- A meaningful error will now be returned when a callback that does not return an `httpx2.Response` is called.
+
 ## [0.36.2] - 2026-04-09
 ### Fixed
 - Document how to ignore query parameters while matching on URL.
@@ -260,7 +270,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `httpx_mock.add_response` `data` parameter is only used for multipart content. It was deprecated since `0.14.0`. Refer to this version changelog entry for more details on how to update your code.
 
 ### Removed
-- `pytest_httpx.to_response` function has been removed. It was deprecated since `0.14.0`. Refer to this version changelog entry for more details on how to update your code.
+- `pytest_httpx2.to_response` function has been removed. It was deprecated since `0.14.0`. Refer to this version changelog entry for more details on how to update your code.
 
 ### Deprecated
 - `httpx_mock.add_response` `data`, `files` and `boundary` parameters that were only used for multipart content. Instead, provide the `stream` parameter with an instance of the `httpx._multipart.MultipartStream`.
@@ -282,16 +292,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.14.0] - 2021-10-22
 ### Changed
 - Requires [`httpx`](https://www.python-httpx.org)==0.20.\*  (many thanks to [`Terence Honles`](https://github.com/terencehonles))
-- Callbacks are now expected to return a `httpx.Response` instance instead of the previous `httpcore.Response` tuple. As a consequence, `pytest_httpx.to_response` now returns a `httpx.Response` instance.
+- Callbacks are now expected to return a `httpx.Response` instance instead of the previous `httpcore.Response` tuple. As a consequence, `pytest_httpx2.to_response` now returns a `httpx.Response` instance.
 
 ### Added
 - `httpx_mock.add_response` now allows to explicitly provide bytes using `content` parameter.
 - `httpx_mock.add_response` now allows to explicitly provide string using `text` parameter.
 - `httpx_mock.add_response` now allows to explicitly provide HTML string content using `html` parameter.
-- `httpx_mock.add_response` now allows to explicitly provide streamed content using `stream` parameter and the new `pytest_httpx.IteratorStream` class.
+- `httpx_mock.add_response` now allows to explicitly provide streamed content using `stream` parameter and the new `pytest_httpx2.IteratorStream` class.
 
 ### Deprecated
-- `pytest_httpx.to_response` is now deprecated in favor of `httpx.Response`. This function will be removed in a future release.
+- `pytest_httpx2.to_response` is now deprecated in favor of `httpx.Response`. This function will be removed in a future release.
 - `httpx_mock.add_response` `data` parameter should now only be used for multipart content. Instead, use the appropriate parameter amongst `content`, `text`, `html` or `stream`.
 
 ## [0.13.0] - 2021-08-19
@@ -329,7 +339,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sending a JSON response using `json` parameter will now set the `application/json` content-type header by default.
 
 ### Fixed
-- Allow to provide any supported `httpx` headers type in headers parameter for `httpx_mock.add_response` and `pytest_httpx.to_response`. Previously only dict was supported.
+- Allow to provide any supported `httpx` headers type in headers parameter for `httpx_mock.add_response` and `pytest_httpx2.to_response`. Previously only dict was supported.
 
 ## [0.9.0] - 2020-09-22
 ### Changed
@@ -429,58 +439,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First release, should be considered as unstable for now as design might change.
 
-[Unreleased]: https://github.com/Colin-b/pytest_httpx/compare/0.36.2...HEAD
-[0.36.2]: https://github.com/Colin-b/pytest_httpx/compare/v0.36.0...0.36.2
-[0.36.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.35.0...v0.36.0
-[0.35.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.34.0...v0.35.0
-[0.34.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.33.0...v0.34.0
-[0.33.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.32.0...v0.33.0
-[0.32.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.31.2...v0.32.0
-[0.31.2]: https://github.com/Colin-b/pytest_httpx/compare/v0.31.1...v0.31.2
-[0.31.1]: https://github.com/Colin-b/pytest_httpx/compare/v0.31.0...v0.31.1
-[0.31.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.30.0...v0.31.0
-[0.30.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.29.0...v0.30.0
-[0.29.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.28.0...v0.29.0
-[0.28.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.27.0...v0.28.0
-[0.27.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.26.0...v0.27.0
-[0.26.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.25.0...v0.26.0
-[0.25.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.24.0...v0.25.0
-[0.24.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.23.1...v0.24.0
-[0.23.1]: https://github.com/Colin-b/pytest_httpx/compare/v0.23.0...v0.23.1
-[0.23.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.22.0...v0.23.0
-[0.22.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.21.3...v0.22.0
-[0.21.3]: https://github.com/Colin-b/pytest_httpx/compare/v0.21.2...v0.21.3
-[0.21.2]: https://github.com/Colin-b/pytest_httpx/compare/v0.21.1...v0.21.2
-[0.21.1]: https://github.com/Colin-b/pytest_httpx/compare/v0.21.0...v0.21.1
-[0.21.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.20.0...v0.21.0
-[0.20.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.19.0...v0.20.0
-[0.19.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.18.0...v0.19.0
-[0.18.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.17.3...v0.18.0
-[0.17.3]: https://github.com/Colin-b/pytest_httpx/compare/v0.17.2...v0.17.3
-[0.17.2]: https://github.com/Colin-b/pytest_httpx/compare/v0.17.1...v0.17.2
-[0.17.1]: https://github.com/Colin-b/pytest_httpx/compare/v0.17.0...v0.17.1
-[0.17.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.16.0...v0.17.0
-[0.16.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.15.0...v0.16.0
-[0.15.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.14.0...v0.15.0
-[0.14.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.13.0...v0.14.0
-[0.13.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.12.1...v0.13.0
-[0.12.1]: https://github.com/Colin-b/pytest_httpx/compare/v0.12.0...v0.12.1
-[0.12.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.11.0...v0.12.0
-[0.11.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.10.1...v0.11.0
-[0.10.1]: https://github.com/Colin-b/pytest_httpx/compare/v0.10.0...v0.10.1
-[0.10.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.9.0...v0.10.0
-[0.9.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.8.0...v0.9.0
-[0.8.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.7.0...v0.8.0
-[0.7.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.6.0...v0.7.0
-[0.6.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.5.0...v0.6.0
-[0.5.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.4.0...v0.5.0
-[0.4.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.3.0...v0.4.0
-[0.3.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.2.1...v0.3.0
-[0.2.1]: https://github.com/Colin-b/pytest_httpx/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/Colin-b/pytest_httpx/compare/v0.0.5...v0.1.0
-[0.0.5]: https://github.com/Colin-b/pytest_httpx/compare/v0.0.4...v0.0.5
-[0.0.4]: https://github.com/Colin-b/pytest_httpx/compare/v0.0.3...v0.0.4
-[0.0.3]: https://github.com/Colin-b/pytest_httpx/compare/v0.0.2...v0.0.3
-[0.0.2]: https://github.com/Colin-b/pytest_httpx/compare/v0.0.1...v0.0.2
-[0.0.1]: https://github.com/Colin-b/pytest_httpx/releases/tag/v0.0.1
+[Unreleased]: https://github.com/angryfoxx/pytest_httpx2/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.36.2...v1.0.0
+[0.36.2]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.36.0...0.36.2
+[0.36.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.35.0...v0.36.0
+[0.35.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.34.0...v0.35.0
+[0.34.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.33.0...v0.34.0
+[0.33.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.32.0...v0.33.0
+[0.32.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.31.2...v0.32.0
+[0.31.2]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.31.1...v0.31.2
+[0.31.1]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.31.0...v0.31.1
+[0.31.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.30.0...v0.31.0
+[0.30.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.29.0...v0.30.0
+[0.29.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.28.0...v0.29.0
+[0.28.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.27.0...v0.28.0
+[0.27.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.26.0...v0.27.0
+[0.26.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.25.0...v0.26.0
+[0.25.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.24.0...v0.25.0
+[0.24.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.23.1...v0.24.0
+[0.23.1]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.23.0...v0.23.1
+[0.23.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.22.0...v0.23.0
+[0.22.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.21.3...v0.22.0
+[0.21.3]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.21.2...v0.21.3
+[0.21.2]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.21.1...v0.21.2
+[0.21.1]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.21.0...v0.21.1
+[0.21.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.20.0...v0.21.0
+[0.20.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.19.0...v0.20.0
+[0.19.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.18.0...v0.19.0
+[0.18.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.17.3...v0.18.0
+[0.17.3]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.17.2...v0.17.3
+[0.17.2]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.17.1...v0.17.2
+[0.17.1]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.17.0...v0.17.1
+[0.17.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.16.0...v0.17.0
+[0.16.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.15.0...v0.16.0
+[0.15.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.14.0...v0.15.0
+[0.14.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.13.0...v0.14.0
+[0.13.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.12.1...v0.13.0
+[0.12.1]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.12.0...v0.12.1
+[0.12.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.11.0...v0.12.0
+[0.11.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.10.1...v0.11.0
+[0.10.1]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.10.0...v0.10.1
+[0.10.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.9.0...v0.10.0
+[0.9.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.8.0...v0.9.0
+[0.8.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.7.0...v0.8.0
+[0.7.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.6.0...v0.7.0
+[0.6.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.2.1...v0.3.0
+[0.2.1]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.0.5...v0.1.0
+[0.0.5]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.0.4...v0.0.5
+[0.0.4]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.0.3...v0.0.4
+[0.0.3]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.0.2...v0.0.3
+[0.0.2]: https://github.com/angryfoxx/pytest_httpx2/compare/v0.0.1...v0.0.2
+[0.0.1]: https://github.com/angryfoxx/pytest_httpx2/releases/tag/v0.0.1

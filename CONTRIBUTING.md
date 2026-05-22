@@ -4,8 +4,8 @@ Everyone is free to contribute on this project.
 
 There are two ways to contribute:
 
-- Submit an issue.
-- Submit a pull request.
+- [Submit an issue](https://github.com/angryfoxx/pytest_httpx2/issues/new/choose).
+- [Submit a pull request](https://github.com/angryfoxx/pytest_httpx2/compare).
 
 ## Submitting an issue
 
@@ -51,9 +51,13 @@ Before creating an issue please make sure that it was not already reported.
 7) Add related [changelog entry](https://keepachangelog.com/en/1.1.0/) in the `Unreleased` section.
     * Unless it is a documentation update.
 
+## Releasing
+
+Maintainers: see [RELEASING.md](RELEASING.md) for PyPI trusted publishing and tag workflow.
+
 #### Enter pull request
 
-1) Go to the *Pull requests* tab and click on the *New pull request* button.
+1) Go to the [*Pull requests* tab](https://github.com/angryfoxx/pytest_httpx2/pulls) and click on the [*New pull request* button](https://github.com/angryfoxx/pytest_httpx2/compare).
 2) *base* should always be set to `develop` and it should be compared to your branch.
 3) Title should be a small sentence describing the request.
 4) The comment should contain as much information as possible
