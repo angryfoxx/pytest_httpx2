@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.0.0 (2026-05-22)
 
 
+### ⚠ BREAKING CHANGES
+
+* **httpx2:** migrate package to pytest_httpx2 ([1bc78c0](https://github.com/angryfoxx/pytest_httpx2/commit/1bc78c0765914b50f114d41edc1a8aa990a79460))
+
+
 ### Fixed
 
 * **release:** use manifest config and bootstrap fork history ([0d55f33](https://github.com/angryfoxx/pytest_httpx2/commit/0d55f33dc5709e76248fa8ba124f93926f481ed9))
