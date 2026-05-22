@@ -4,11 +4,12 @@ import os
 import re
 import time
 from collections.abc import AsyncIterable
+from typing import Any
+from unittest.mock import ANY
 
 import httpx2
 import pytest
 from pytest import Testdir
-from unittest.mock import ANY
 
 import pytest_httpx2
 from pytest_httpx2 import HTTPXMock
@@ -1435,8 +1436,8 @@ def test_request_retrieval_with_more_than_one(testdir: Testdir) -> None:
     testdir.makepyfile("""
         import httpx2
         import pytest
-        
-        
+
+
         @pytest.mark.asyncio
         async def test_request_retrieval_with_more_than_one(httpx_mock):
             httpx_mock.add_response(is_reusable=True)

@@ -21,8 +21,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: uv sync --all-extras --dev --frozen
-      - name: Ensure pre-commit was applied
-        run: uv run pre-commit run --all-files
+      - name: Lint and format
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Type check
+        run: uv run ty check pytest_httpx2
       - name: Test
         run: uv run pytest --cov-report=xml --junitxml=junit.xml -o junit_family=legacy
       - name: Upload test results to Codecov

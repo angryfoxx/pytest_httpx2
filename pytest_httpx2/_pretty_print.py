@@ -1,5 +1,3 @@
-from typing import Union
-
 import httpx2
 
 from pytest_httpx2._httpx_internals import _proxy_url
@@ -9,7 +7,7 @@ from pytest_httpx2._request_matcher import _RequestMatcher
 class RequestDescription:
     def __init__(
         self,
-        real_transport: Union[httpx2.BaseTransport, httpx2.AsyncBaseTransport],
+        real_transport: httpx2.BaseTransport | httpx2.AsyncBaseTransport,
         request: httpx2.Request,
         matchers: list[_RequestMatcher],
     ):

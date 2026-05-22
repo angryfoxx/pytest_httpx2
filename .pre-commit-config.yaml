@@ -1,5 +1,28 @@
 repos:
-  - repo: https://github.com/psf/black
-    rev: 26.3.1
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
     hooks:
-      - id: black
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: debug-statements
+  - repo: https://github.com/tombi-toml/tombi-pre-commit
+    rev: v0.9.6
+    hooks:
+      - id: tombi-format
+        args: [--offline]
+      - id: tombi-lint
+        args: [--offline]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.13
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty check
+        entry: uv run ty check pytest_httpx2
+        language: system
+        pass_filenames: false

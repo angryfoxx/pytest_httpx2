@@ -1,82 +1,75 @@
-[build-system]
-requires = ["setuptools>=77"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "httpx2-pytest"
 description = "Send responses to httpx2."
 readme = "README.md"
 requires-python = ">=3.10"
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = [
+  "LICENSE.txt",
+]
 authors = [
-    { name = "Colin Bounouar", email = "github.coping055@passinbox.com" },
+  { name = "Colin Bounouar", email = "github.coping055@passinbox.com" },
 ]
 maintainers = [
-    { name = "Colin Bounouar", email = "github.coping055@passinbox.com" },
+  { name = "Colin Bounouar", email = "github.coping055@passinbox.com" },
 ]
 keywords = [
-    "httpx2",
-    "pytest",
-    "testing",
+  "httpx2",
+  "pytest",
+  "testing",
 ]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Framework :: Pytest",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Natural Language :: English",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-    "Topic :: Internet :: WWW/HTTP",
-    "Topic :: Software Development :: Build Tools",
-    "Typing :: Typed",
+  "Development Status :: 5 - Production/Stable",
+  "Framework :: Pytest",
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Internet :: WWW/HTTP",
+  "Topic :: Software Development :: Build Tools",
+  "Typing :: Typed",
 ]
 dependencies = [
-    "httpx2==2.*",
-    "pytest==9.*",
+  "httpx2==2.*",
+  "pytest==9.*",
 ]
 dynamic = ["version"]
 
 [project.urls]
-Homepage = "https://github.com/angryfoxx/pytest_httpx2"
-Documentation = "https://github.com/angryfoxx/pytest_httpx2#readme"
-Repository = "https://github.com/angryfoxx/pytest_httpx2"
 Changelog = "https://github.com/angryfoxx/pytest_httpx2/blob/master/CHANGELOG.md"
+Documentation = "https://github.com/angryfoxx/pytest_httpx2#readme"
+Homepage = "https://github.com/angryfoxx/pytest_httpx2"
 Issues = "https://github.com/angryfoxx/pytest_httpx2/issues"
-
-[project.optional-dependencies]
-testing = [
-    # Used to check coverage
-    "pytest-cov==7.*",
-    # Used to run async tests
-    "pytest-asyncio==1.*",
-]
+Repository = "https://github.com/angryfoxx/pytest_httpx2"
 
 [project.entry-points.pytest11]
 pytest_httpx2 = "pytest_httpx2"
 
-[dependency-groups]
-dev = [
-    "build>=1.0",
-    "pre-commit>=4.0",
-    "twine>=6.0",
+[project.optional-dependencies]
+testing = [
+  # Used to check coverage
+  "pytest-cov==7.*",
+  # Used to run async tests
+  "pytest-asyncio==1.*",
 ]
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["pytest_httpx2*"]
+[dependency-groups]
+dev = [
+  "build>=1.0",
+  "pre-commit>=4.0",
+  "ruff>=0.15",
+  "twine>=6.0",
+  "ty>=0.0.38",
+]
 
-[tool.setuptools.dynamic]
-version = {attr = "pytest_httpx2.version.__version__"}
-
-[tool.pytest]
-asyncio_mode = "auto"
-addopts = ["--cov=pytest_httpx2", "--runpytest=subprocess"]
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
 
 [tool.coverage.report]
 fail_under = 100
@@ -84,6 +77,34 @@ show_missing = true
 
 [tool.coverage.run]
 patch = ["subprocess"]
+
+[tool.pytest]
+addopts = ["--cov=pytest_httpx2", "--runpytest=subprocess"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pytest_httpx2*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pytest_httpx2.version.__version__" }
+
+[tool.ty.src]
+include = ["pytest_httpx2"]
+
+[tool.ty.environment]
+python-version = "3.10"
 
 [tool.uv]
 default-groups = ["dev"]

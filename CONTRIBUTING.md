@@ -39,13 +39,19 @@ Before creating an issue please make sure that it was not already reported.
 #### Code
 
 1) Create a new branch based on `develop` branch.
-2) Fetch all dev dependencies.
-    * Install required python modules using `pip`: **python -m pip install .[testing]**
-3) Ensure tests are ok by running them using [`pytest`](https://doc.pytest.org/en/latest/index.html).
-4) Add your changes.
-5) Follow [Black](https://black.readthedocs.io/en/stable/) code formatting.
-    * Install [pre-commit](https://pre-commit.com) python module using `pip`: **python -m pip install pre-commit**
-    * To add the [pre-commit](https://pre-commit.com) hook, after the installation run: **pre-commit install**
+2) Install [uv](https://docs.astral.sh/uv/) and sync dependencies:
+    ```shell
+    uv sync --all-extras --dev
+    ```
+3) Ensure tests pass:
+    ```shell
+    uv run pytest
+    ```
+4) Install [pre-commit](https://pre-commit.com) hooks (uses [Tombi](https://tombi-toml.github.io/tombi/) for TOML formatting and linting, [Ruff](https://docs.astral.sh/ruff/) for Python linting/formatting, and [ty](https://docs.astral.sh/ty/) for type checking):
+    ```shell
+    uv run pre-commit install
+    ```
+5) Add your changes.
 6) Add at least one [`pytest`](https://doc.pytest.org/en/latest/index.html) test case.
     * Unless it is an internal refactoring request or a documentation update.
 7) Add related [changelog entry](https://keepachangelog.com/en/1.1.0/) in the `Unreleased` section.

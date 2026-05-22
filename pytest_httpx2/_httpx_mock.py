@@ -1,7 +1,7 @@
 import copy
 import inspect
-from typing import Union, Optional, Callable, Any, NoReturn
-from collections.abc import Awaitable
+from collections.abc import Awaitable, Callable
+from typing import Any
 
 import httpx2
 
@@ -20,18 +20,14 @@ class HTTPXMock:
         """Private and subject to breaking changes without notice."""
         self._options = options
         self._requests: list[
-            tuple[
-                Union[httpx2.HTTPTransport, httpx2.AsyncHTTPTransport], httpx2.Request
-            ]
+            tuple[httpx2.HTTPTransport | httpx2.AsyncHTTPTransport, httpx2.Request]
         ] = []
         self._callbacks: list[
             tuple[
                 _RequestMatcher,
                 Callable[
                     [httpx2.Request],
-                    Union[
-                        Optional[httpx2.Response], Awaitable[Optional[httpx2.Response]]
-                    ],
+                    httpx2.Response | None | Awaitable[httpx2.Response | None],
                 ],
             ]
         ] = []
@@ -41,10 +37,10 @@ class HTTPXMock:
         self,
         status_code: int = 200,
         http_version: str = "HTTP/1.1",
-        headers: Optional[_httpx_internals.HeaderTypes] = None,
-        content: Optional[bytes] = None,
-        text: Optional[str] = None,
-        html: Optional[str] = None,
+        headers: _httpx_internals.HeaderTypes | None = None,
+        content: bytes | None = None,
+        text: str | None = None,
+        html: str | None = None,
         stream: Any = None,
         json: Any = None,
         **matchers: Any,
@@ -96,7 +92,7 @@ class HTTPXMock:
         self,
         callback: Callable[
             [httpx2.Request],
-            Union[Optional[httpx2.Response], Awaitable[Optional[httpx2.Response]]],
+            httpx2.Response | None | Awaitable[httpx2.Response | None],
         ],
         **matchers: Any,
     ) -> None:
@@ -197,14 +193,14 @@ class HTTPXMock:
 
     def _explain_that_callback_must_return_a_response(
         self,
-        real_transport: Union[httpx2.BaseTransport, httpx2.AsyncBaseTransport],
+        real_transport: httpx2.BaseTransport | httpx2.AsyncBaseTransport,
         request: httpx2.Request,
     ) -> str:
         return f"Callback registered for {RequestDescription(real_transport, request, [])} MUST return httpx2.Response"
 
     def _explain_that_no_response_was_found(
         self,
-        real_transport: Union[httpx2.BaseTransport, httpx2.AsyncBaseTransport],
+        real_transport: httpx2.BaseTransport | httpx2.AsyncBaseTransport,
         request: httpx2.Request,
     ) -> str:
         matchers = [matcher for matcher, _ in self._callbacks]
@@ -233,14 +229,14 @@ class HTTPXMock:
 
     def _get_callback(
         self,
-        real_transport: Union[httpx2.HTTPTransport, httpx2.AsyncHTTPTransport],
+        real_transport: httpx2.HTTPTransport | httpx2.AsyncHTTPTransport,
         request: httpx2.Request,
-    ) -> Optional[
+    ) -> (
         Callable[
-            [httpx2.Request],
-            Union[Optional[httpx2.Response], Awaitable[Optional[httpx2.Response]]],
+            [httpx2.Request], httpx2.Response | None | Awaitable[httpx2.Response | None]
         ]
-    ]:
+        | None
+    ):
         callbacks = [
             (matcher, callback)
             for matcher, callback in self._callbacks
@@ -290,7 +286,7 @@ class HTTPXMock:
             if matcher.match(real_transport, request)
         ]
 
-    def get_request(self, **matchers: Any) -> Optional[httpx2.Request]:
+    def get_request(self, **matchers: Any) -> httpx2.Request | None:
         """
         Return the single request that match (or None).
 
@@ -309,9 +305,9 @@ class HTTPXMock:
         :raises AssertionError: in case more than one request match.
         """
         requests = self.get_requests(**matchers)
-        assert (
-            len(requests) <= 1
-        ), f"More than one request ({len(requests)}) matched, use get_requests instead or refine your filters."
+        assert len(requests) <= 1, (
+            f"More than one request ({len(requests)}) matched, use get_requests instead or refine your filters."
+        )
         return requests[0] if requests else None
 
     def reset(self) -> None:
