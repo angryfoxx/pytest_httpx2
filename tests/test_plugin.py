@@ -63,7 +63,7 @@ def test_httpx_mock_unused_response(testdir: Testdir) -> None:
             "*AssertionError: The following responses are mocked but not requested:",
             "*  - Match any request",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
         ],
         consecutive=True,
     )
@@ -104,7 +104,7 @@ def test_httpx_mock_unused_callback(testdir: Testdir) -> None:
             "*AssertionError: The following responses are mocked but not requested:",
             "*  - Match any request",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
         ],
         consecutive=True,
     )
@@ -152,7 +152,7 @@ def test_httpx_mock_unexpected_request(testdir: Testdir) -> None:
             "*AssertionError: The following requests were not expected:",
             "*  - GET request on https://foo.tld",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-not-register-responses-for-every-request",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-not-register-responses-for-every-request",
         ],
         consecutive=True,
     )
@@ -202,7 +202,7 @@ def test_httpx_mock_already_matched_response(testdir: Testdir) -> None:
             "*AssertionError: The following requests were not expected:",
             "*  - GET request on https://foo.tld",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-not-register-responses-for-every-request",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-not-register-responses-for-every-request",
         ],
         consecutive=True,
     )
@@ -258,7 +258,7 @@ def test_httpx_mock_unmatched_request_without_responses(
             "*AssertionError: The following requests were not expected:",
             "*  - GET request on https://foo22.tld",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-not-register-responses-for-every-request",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-not-register-responses-for-every-request",
         ],
         consecutive=True,
     )
@@ -301,7 +301,7 @@ def test_httpx_mock_unmatched_request_with_only_unmatched_responses(
             "*  - Match any request on https://foo2.tld",
             "*  - Match any request on https://foo3.tld",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
         ],
         consecutive=True,
     )
@@ -345,7 +345,7 @@ def test_httpx_mock_unmatched_request_with_only_unmatched_reusable_responses(
             "*  - Match GET request on https://foo2.tld",
             "*  - Match every request on https://foo3.tld",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
         ],
         consecutive=True,
     )
@@ -381,7 +381,7 @@ def test_httpx_mock_unmatched_request_with_only_matched_responses(
             "*- Already matched any request on https://foo.tld",
             "*- Already matched any request on https://foo.tld",
             "*",
-            "*If you wanted to reuse an already matched response instead of registering it again, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-a-response-for-more-than-one-request",
+            "*If you wanted to reuse an already matched response instead of registering it again, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-a-response-for-more-than-one-request",
         ],
         consecutive=True,
     )
@@ -391,7 +391,7 @@ def test_httpx_mock_unmatched_request_with_only_matched_responses(
             "*AssertionError: The following requests were not expected:",
             "*  - GET request on https://foo22.tld",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-not-register-responses-for-every-request",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-not-register-responses-for-every-request",
         ],
         consecutive=True,
     )
@@ -437,7 +437,7 @@ def test_httpx_mock_unmatched_request_with_only_matched_reusable_responses(
             "*AssertionError: The following requests were not expected:",
             "*  - GET request on https://foo22.tld",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-not-register-responses-for-every-request",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-not-register-responses-for-every-request",
         ],
         consecutive=True,
     )
@@ -479,7 +479,7 @@ def test_httpx_mock_unmatched_request_with_matched_and_unmatched_responses(
             "*- Already matched any request on https://foo.tld",
             "*- Already matched any request on https://foo.tld",
             "*",
-            "*If you wanted to reuse an already matched response instead of registering it again, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-a-response-for-more-than-one-request",
+            "*If you wanted to reuse an already matched response instead of registering it again, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-a-response-for-more-than-one-request",
         ],
         consecutive=True,
     )
@@ -490,7 +490,7 @@ def test_httpx_mock_unmatched_request_with_matched_and_unmatched_responses(
             "*  - Match any request on https://foo2.tld",
             "*  - Match any request on https://foo3.tld",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
         ],
         consecutive=True,
     )
@@ -543,7 +543,7 @@ def test_httpx_mock_unmatched_request_with_matched_and_unmatched_reusable_respon
             "*  - Match every request on https://foo33.tld",
             "*  - Match every request on https://foo4.tld",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
         ],
         consecutive=True,
     )
@@ -698,7 +698,7 @@ def test_mandatory_response_not_matched(testdir: Testdir) -> None:
             "*AssertionError: The following responses are mocked but not requested:",
             "*  - Match any request on https://test_url2",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
         ],
         consecutive=True,
     )
@@ -720,7 +720,7 @@ def test_reusable_response_not_matched(testdir: Testdir) -> None:
             "*AssertionError: The following responses are mocked but not requested:",
             "*  - Match every request on https://test_url2",
             "*  ",
-            "*  If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
+            "*  If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested",
         ],
         consecutive=True,
     )

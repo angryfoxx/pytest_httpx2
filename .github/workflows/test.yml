@@ -44,7 +44,7 @@ jobs:
         uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: angryfoxx/pytest_httpx2
+          slug: angryfoxx/httpx2-pytest
 
       - name: Test packages creation
         run: uv build

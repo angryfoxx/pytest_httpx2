@@ -43,11 +43,11 @@ dependencies = [
 dynamic = ["version"]
 
 [project.urls]
-Changelog = "https://github.com/angryfoxx/pytest_httpx2/blob/master/CHANGELOG.md"
-Documentation = "https://github.com/angryfoxx/pytest_httpx2#readme"
-Homepage = "https://github.com/angryfoxx/pytest_httpx2"
-Issues = "https://github.com/angryfoxx/pytest_httpx2/issues"
-Repository = "https://github.com/angryfoxx/pytest_httpx2"
+Changelog = "https://github.com/angryfoxx/httpx2-pytest/blob/master/CHANGELOG.md"
+Documentation = "https://github.com/angryfoxx/httpx2-pytest#readme"
+Homepage = "https://github.com/angryfoxx/httpx2-pytest"
+Issues = "https://github.com/angryfoxx/httpx2-pytest/issues"
+Repository = "https://github.com/angryfoxx/httpx2-pytest"
 
 [project.entry-points.pytest11]
 pytest_httpx2 = "pytest_httpx2"

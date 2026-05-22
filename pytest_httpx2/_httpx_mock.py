@@ -241,7 +241,7 @@ class HTTPXMock:
             # If we could not find a response, but we have already matched responses
             # it might be that user is expecting one of those responses to be reused
             if any(not matcher.is_reusable for matcher in already_matched):
-                message += "\n\nIf you wanted to reuse an already matched response instead of registering it again, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-a-response-for-more-than-one-request"
+                message += "\n\nIf you wanted to reuse an already matched response instead of registering it again, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-a-response-for-more-than-one-request"
 
         return message
 
@@ -345,7 +345,7 @@ class HTTPXMock:
             "The following responses are mocked but not requested:\n"
             f"{matchers_description}\n"
             "\n"
-            "If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested"
+            "If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested"
         )
 
         if self._options.assert_all_requests_were_expected:
@@ -359,7 +359,7 @@ class HTTPXMock:
                 f"The following requests were not expected:\n"
                 f"{requests_description}\n"
                 "\n"
-                "If this is on purpose, refer to https://github.com/angryfoxx/pytest_httpx2/blob/master/README.md#allow-to-not-register-responses-for-every-request"
+                "If this is on purpose, refer to https://github.com/angryfoxx/httpx2-pytest/blob/master/README.md#allow-to-not-register-responses-for-every-request"
             )
 
 

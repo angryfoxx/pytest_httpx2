@@ -133,7 +133,7 @@ def test_regex_url_and_match_params(httpx_mock: HTTPXMock) -> None:
 
     assert (
         str(exception_info.value)
-        == "match_params cannot be used in addition to regex URL. Request this feature via https://github.com/angryfoxx/pytest_httpx2/issues/new?title=Regex%20URL%20should%20allow%20match_params&body=Hi,%20I%20need%20a%20regex%20to%20match%20the%20non%20query%20part%20of%20the%20URL%20only"
+        == "match_params cannot be used in addition to regex URL. Request this feature via https://github.com/angryfoxx/httpx2-pytest/issues/new?title=Regex%20URL%20should%20allow%20match_params&body=Hi,%20I%20need%20a%20regex%20to%20match%20the%20non%20query%20part%20of%20the%20URL%20only"
     )
 
 

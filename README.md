@@ -2,9 +2,9 @@
 
 <p align="center">
 <a href="https://pypi.org/project/httpx2-pytest/"><img alt="pypi version" src="https://img.shields.io/pypi/v/httpx2-pytest"></a>
-<a href="https://github.com/angryfoxx/pytest_httpx2/actions"><img alt="Build status" src="https://github.com/angryfoxx/pytest_httpx2/actions/workflows/Test/badge.svg"></a>
-<a href="https://codecov.io/gh/angryfoxx/pytest_httpx2"><img alt="Coverage" src="https://codecov.io/gh/angryfoxx/pytest_httpx2/branch/master/graph/badge.svg"/></a>
-<a href="https://github.com/angryfoxx/pytest_httpx2"><img alt="Number of tests" src="https://img.shields.io/badge/tests-338 passed-blue"></a>
+<a href="https://github.com/angryfoxx/httpx2-pytest/actions"><img alt="Build status" src="https://github.com/angryfoxx/httpx2-pytest/actions/workflows/Test/badge.svg"></a>
+<a href="https://codecov.io/gh/angryfoxx/httpx2-pytest"><img alt="Coverage" src="https://codecov.io/gh/angryfoxx/httpx2-pytest/branch/master/graph/badge.svg"/></a>
+<a href="https://github.com/angryfoxx/httpx2-pytest"><img alt="Number of tests" src="https://img.shields.io/badge/tests-338 passed-blue"></a>
 <a href="https://pypi.org/project/httpx2-pytest/"><img alt="Number of downloads" src="https://img.shields.io/pypi/dm/httpx2-pytest"></a>
 </p>
 

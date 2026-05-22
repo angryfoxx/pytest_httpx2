@@ -19,7 +19,7 @@ Configure [PyPI trusted publishers](https://docs.pypi.org/trusted-publishers/) s
 | --- | --- |
 | PyPI Project Name | `httpx2-pytest` |
 | Owner | `angryfoxx` |
-| Repository name | `pytest_httpx2` |
+| Repository name | `httpx2-pytest` |
 | Workflow name | `release.yml` |
 | Environment name | `pypi` |
 
