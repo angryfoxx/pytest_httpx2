@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.0 (2026-05-22)
+
+
+### Fixed
+
+* **release:** use manifest config and bootstrap fork history ([0d55f33](https://github.com/angryfoxx/pytest_httpx2/commit/0d55f33dc5709e76248fa8ba124f93926f481ed9))
+
+
+### Changed
+
+* clarify ecosystem and contributor workflow ([c30b143](https://github.com/angryfoxx/pytest_httpx2/commit/c30b143e1b302431879997e6f1f94fac64b045df))
+
 ## [0.36.2] - 2026-04-09
 ### Fixed
 - Document how to ignore query parameters while matching on URL.
