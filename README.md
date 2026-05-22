@@ -156,7 +156,7 @@ Use `match_params` to partially match query parameters without having to provide
 
 If this parameter is provided, `url` parameter must not contain any query parameter.
 
-All query parameters have to be provided (as `str`). You can however use `unittest.mock.ANY` to do partial matching.
+All query parameters have to be provided. You can however use `unittest.mock.ANY` to do partial matching.
 
 ```python
 import httpx2
@@ -164,13 +164,13 @@ from pytest_httpx2 import HTTPXMock
 from unittest.mock import ANY
 
 def test_partial_params_matching(httpx_mock: HTTPXMock):
-    httpx_mock.add_response(url="https://test_url", match_params={"a": "1", "b": ANY})
+    httpx_mock.add_response(url="https://test_url", match_params={"a": 1, "b": ANY})
 
     with httpx2.Client() as client:
         response = client.get("https://test_url?a=1&b=2")
 
 def test_partial_multi_params_matching(httpx_mock: HTTPXMock):
-    httpx_mock.add_response(url="https://test_url", match_params={"a": ["1", "3"], "b": ["2", ANY]})
+    httpx_mock.add_response(url="https://test_url", match_params={"a": ["1", 3], "b": ["2", ANY]})
 
     with httpx2.Client() as client:
         response = client.get("https://test_url?a=1&b=2&a=3&b=4")
@@ -222,7 +222,7 @@ def test_head(httpx_mock: HTTPXMock):
 
     with httpx2.Client() as client:
         response = client.head("https://test_url")
-    
+
 ```
 
 #### Matching on proxy URL
@@ -298,14 +298,14 @@ def test_json_matching(httpx_mock: HTTPXMock):
     with httpx2.Client() as client:
         response = client.post("https://test_url", json={"a": "json", "b": 2})
 
-        
+
 def test_partial_json_matching(httpx_mock: HTTPXMock):
     httpx_mock.add_response(match_json={"a": "json", "b": ANY})
 
     with httpx2.Client() as client:
         response = client.post("https://test_url", json={"a": "json", "b": 2})
 ```
-        
+
 Note that `match_content` or `match_files` cannot be provided if `match_json` is also provided.
 
 ##### Matching on HTTP multipart body
@@ -324,7 +324,7 @@ def test_multipart_matching(httpx_mock: HTTPXMock):
     with httpx2.Client() as client:
         response = client.post("https://test_url", files={"name": ("file_name", b"File content")}, data={"field": "value"})
 ```
-        
+
 Note that `match_content` or `match_json` cannot be provided if `match_files` is also provided.
 
 #### Matching on extensions
@@ -377,7 +377,7 @@ def test_json(httpx_mock: HTTPXMock):
 
     with httpx2.Client() as client:
         assert client.get("https://test_url").json() == [{"key1": "value1", "key2": "value2"}]
-    
+
 ```
 
 Note that the `content-type` header will be set to `application/json` by default in the response.
@@ -411,7 +411,7 @@ def test_bytes_body(httpx_mock: HTTPXMock):
 
     with httpx2.Client() as client:
         assert client.get("https://test_url").content == b"This is my bytes content"
-    
+
 ```
 
 Use `html` parameter to reply with a custom body by providing UTF-8 encoded string.
@@ -455,7 +455,7 @@ async def test_async_streaming(httpx_mock: HTTPXMock):
     async with httpx2.AsyncClient() as client:
         async with client.stream(method="GET", url="https://test_url") as response:
             assert [part async for part in response.aiter_raw()] == [b"part 1", b"part 2"]
-    
+
 ```
 
 ### Add multipart response
@@ -485,7 +485,7 @@ Content-Type: application/octet-stream\r
 content of file 1\r
 --2256d3a36d2a61a1eba35a22bee5c74a--\r
 '''
-    
+
 ```
 
 ### Add non 200 response
@@ -770,12 +770,12 @@ def pytest_collection_modifyitems(session, config, items):
         item.add_marker(pytest.mark.httpx_mock(assert_all_responses_were_requested=False))
 ```
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Note that [there currently is a bug in pytest](https://github.com/pytest-dev/pytest/issues/10406) where `pytest_collection_modifyitems` will actually add the marker AFTER its `module` and `class` registration.
-> 
+>
 > Meaning the order is currently:
 > module -> class -> test suite -> test
-> 
+>
 > instead of:
 > test suite -> module -> class -> test
 
@@ -793,8 +793,8 @@ def test_fewer_requests_than_expected(httpx_mock):
     httpx_mock.add_response(is_optional=True)
 ```
 
-If you don't have control over the response registration process (shared fixtures), 
-and you want to allow fewer requests than what you registered responses for, 
+If you don't have control over the response registration process (shared fixtures),
+and you want to allow fewer requests than what you registered responses for,
 you can use the `httpx_mock` marker `assert_all_responses_were_requested` option.
 
 > [!CAUTION]
@@ -859,8 +859,8 @@ def test_more_requests_than_responses(httpx_mock):
         client.get("https://test_url")
 ```
 
-If you don't have control over the response registration process (shared fixtures), 
-and you want to allow multiple requests to match the same registered response, 
+If you don't have control over the response registration process (shared fixtures),
+and you want to allow multiple requests to match the same registered response,
 you can use the `httpx_mock` marker `can_send_already_matched_responses` option.
 
 With this option, in case all matching responses have been sent at least once, the last one (according to the registration order) will be sent.

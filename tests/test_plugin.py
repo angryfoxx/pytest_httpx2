@@ -93,7 +93,7 @@ def test_httpx_mock_unused_callback(testdir: Testdir) -> None:
         def test_httpx_mock_unused_callback(httpx_mock):
             def unused(*args, **kwargs):
                 pass
-        
+
             httpx_mock.add_callback(unused)
 
     """)
@@ -122,7 +122,7 @@ def test_httpx_mock_unused_callback_without_assertion(testdir: Testdir) -> None:
         def test_httpx_mock_unused_callback_without_assertion(httpx_mock):
             def unused(*args, **kwargs):
                 pass
-        
+
             httpx_mock.add_callback(unused)
 
     """)
@@ -564,14 +564,14 @@ def test_httpx_mock_should_mock_sync(testdir: Testdir) -> None:
             with httpx2.Client() as client:
                 # Mocked request
                 client.get("https://foo.tld")
-            
+
                 # Non mocked request
                 with pytest.raises(httpx2.ConnectError):
                     client.get("https://localhost:5005")
-            
+
             # Assert that a single request was mocked
             assert len(httpx_mock.get_requests()) == 1
-            
+
     """)
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
@@ -593,14 +593,14 @@ def test_httpx_mock_should_mock_async(testdir: Testdir) -> None:
             async with httpx2.AsyncClient() as client:
                 # Mocked request
                 await client.get("https://foo.tld")
-            
+
                 # Non mocked request
                 with pytest.raises(httpx2.ConnectError):
                     await client.get("https://localhost:5005")
-            
+
             # Assert that a single request was mocked
             assert len(httpx_mock.get_requests()) == 1
-            
+
     """)
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
@@ -644,14 +644,14 @@ def test_httpx_mock_options_on_multi_levels_are_aggregated(testdir: Testdir) -> 
                 # Assert that latest should_mock is handled
                 with pytest.raises(httpx2.ConnectError):
                     await client.get("https://localhost:5005")
-            
+
                 # Assert that assert_all_requests_were_expected is the one at module level
                 with pytest.raises(httpx2.TimeoutException):
                     await client.get("https://unexpected.url")
-            
-            # Assert that 2 requests out of 3 were mocked 
+
+            # Assert that 2 requests out of 3 were mocked
             assert len(httpx_mock.get_requests()) == 2
-            
+
     """)
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
@@ -667,7 +667,7 @@ def test_invalid_marker(testdir: Testdir) -> None:
         @pytest.mark.httpx_mock(foo=123)
         def test_invalid_marker(httpx_mock):
             pass
-            
+
     """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1)
@@ -688,7 +688,7 @@ def test_mandatory_response_not_matched(testdir: Testdir) -> None:
             httpx_mock.add_response(url="https://test_url")
             # This response MUST be requested
             httpx_mock.add_response(url="https://test_url2", is_optional=False)
-            
+
     """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, passed=1)
@@ -710,7 +710,7 @@ def test_reusable_response_not_matched(testdir: Testdir) -> None:
 
         def test_reusable_response_not_matched(httpx_mock):
             httpx_mock.add_response(url="https://test_url2", is_reusable=True)
-            
+
     """)
     result = testdir.runpytest()
     result.assert_outcomes(errors=1, passed=1)

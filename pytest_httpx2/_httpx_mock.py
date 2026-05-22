@@ -67,7 +67,7 @@ class HTTPXMock:
         :param match_data: Multipart data (excluding files) identifying the request(s) to match. Must be a dictionary.
         :param match_files: Multipart files identifying the request(s) to match. Refer to httpx2 documentation for more information on supported values: https://httpx2.pydantic.dev/advanced/clients/#multipart-file-encoding
         :param match_extensions: Extensions identifying the request(s) to match. Must be a dictionary.
-        :param match_params: Query string parameters identifying the request(s) to match (if not provided as part of URL already). Must be a dictionary with str keys (parameter name) and str values (or a list of str values if parameter is provided more than once).
+        :param match_params: Query string parameters identifying the request(s) to match (if not provided as part of URL already). Must be a dictionary with str keys (parameter name) and str, bool, int or float values (or a list of values if parameter is provided more than once).
         :param is_optional: True will mark this response as optional, False will expect a request matching it. Must be a boolean. Default to the opposite of assert_all_responses_were_requested option value (itself defaulting to True, meaning this parameter default to False).
         :param is_reusable: True will allow re-using this response even if it already matched, False prevent re-using it. Must be a boolean. Default to the can_send_already_matched_responses option value (itself defaulting to False).
         """
@@ -112,7 +112,7 @@ class HTTPXMock:
         :param match_data: Multipart data (excluding files) identifying the request(s) to match. Must be a dictionary.
         :param match_files: Multipart files identifying the request(s) to match. Refer to httpx2 documentation for more information on supported values: https://httpx2.pydantic.dev/advanced/clients/#multipart-file-encoding
         :param match_extensions: Extensions identifying the request(s) to match. Must be a dictionary.
-        :param match_params: Query string parameters identifying the request(s) to match (if not provided as part of URL already). Must be a dictionary with str keys (parameter name) and str values (or a list of str values if parameter is provided more than once).
+        :param match_params: Query string parameters identifying the request(s) to match (if not provided as part of URL already). Must be a dictionary with str keys (parameter name) and str, bool, int or float values (or a list of values if parameter is provided more than once).
         :param is_optional: True will mark this callback as optional, False will expect a request matching it. Must be a boolean. Default to the opposite of assert_all_responses_were_requested option value (itself defaulting to True, meaning this parameter default to False).
         :param is_reusable: True will allow re-using this callback even if it already matched, False prevent re-using it. Must be a boolean. Default to the can_send_already_matched_responses option value (itself defaulting to False).
         """
@@ -134,7 +134,7 @@ class HTTPXMock:
         :param match_data: Multipart data (excluding files) identifying the request(s) to match. Must be a dictionary.
         :param match_files: Multipart files identifying the request(s) to match. Refer to httpx2 documentation for more information on supported values: https://httpx2.pydantic.dev/advanced/clients/#multipart-file-encoding
         :param match_extensions: Extensions identifying the request(s) to match. Must be a dictionary.
-        :param match_params: Query string parameters identifying the request(s) to match (if not provided as part of URL already). Must be a dictionary with str keys (parameter name) and str values (or a list of str values if parameter is provided more than once).
+        :param match_params: Query string parameters identifying the request(s) to match (if not provided as part of URL already). Must be a dictionary with str keys (parameter name) and str, bool, int or float values (or a list of values if parameter is provided more than once).
         :param is_optional: True will mark this exception response as optional, False will expect a request matching it. Must be a boolean. Default to the opposite of assert_all_responses_were_requested option value (itself defaulting to True, meaning this parameter default to False).
         :param is_reusable: True will allow re-using this exception response even if it already matched, False prevent re-using it. Must be a boolean. Default to the can_send_already_matched_responses option value (itself defaulting to False).
         """
@@ -162,7 +162,16 @@ class HTTPXMock:
             if isinstance(response, httpx2.Response):
                 return _unread(response)
 
-        self._request_not_matched(real_transport, request)
+            raise self._request_not_matched(
+                request,
+                self._explain_that_callback_must_return_a_response(
+                    real_transport, request
+                ),
+            )
+
+        raise self._request_not_matched(
+            request, self._explain_that_no_response_was_found(real_transport, request)
+        )
 
     async def _handle_async_request(
         self,
@@ -183,7 +192,16 @@ class HTTPXMock:
             if isinstance(response, httpx2.Response):
                 return _unread(response)
 
-        self._request_not_matched(real_transport, request)
+            raise self._request_not_matched(
+                request,
+                self._explain_that_callback_must_return_a_response(
+                    real_transport, request
+                ),
+            )
+
+        raise self._request_not_matched(
+            request, self._explain_that_no_response_was_found(real_transport, request)
+        )
 
     def _request_not_matched(
         self, request: httpx2.Request, message: str
@@ -277,7 +295,7 @@ class HTTPXMock:
         :param match_data: Multipart data (excluding files) identifying the requests to retrieve. Must be a dictionary.
         :param match_files: Multipart files identifying the requests to retrieve. Refer to httpx2 documentation for more information on supported values: https://httpx2.pydantic.dev/advanced/clients/#multipart-file-encoding
         :param match_extensions: Extensions identifying the requests to retrieve. Must be a dictionary.
-        :param match_params: Query string parameters identifying the requests to retrieve (if not provided as part of URL already). Must be a dictionary with str keys (parameter name) and str values (or a list of str values if parameter is provided more than once).
+        :param match_params: Query string parameters identifying the requests to retrieve (if not provided as part of URL already). Must be a dictionary with str keys (parameter name) and str, bool, int or float values (or a list of values if parameter is provided more than once).
         """
         matcher = _RequestMatcher(self._options, **matchers)
         return [
@@ -301,7 +319,7 @@ class HTTPXMock:
         :param match_data: Multipart data (excluding files) identifying the request to retrieve. Must be a dictionary.
         :param match_files: Multipart files identifying the request to retrieve. Refer to httpx2 documentation for more information on supported values: https://httpx2.pydantic.dev/advanced/clients/#multipart-file-encoding
         :param match_extensions: Extensions identifying the request to retrieve. Must be a dictionary.
-        :param match_params: Query string parameters identifying the request to retrieve (if not provided as part of URL already). Must be a dictionary with str keys (parameter name) and str values (or a list of str values if parameter is provided more than once).
+        :param match_params: Query string parameters identifying the request to retrieve (if not provided as part of URL already). Must be a dictionary with str keys (parameter name) and str, bool, int or float values (or a list of values if parameter is provided more than once).
         :raises AssertionError: in case more than one request match.
         """
         requests = self.get_requests(**matchers)

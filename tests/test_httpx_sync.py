@@ -1,6 +1,7 @@
 import os
 import re
 from collections.abc import Iterable
+from typing import Any
 from unittest.mock import ANY
 
 import httpx2
@@ -67,7 +68,7 @@ def test_url_query_string_matching(httpx_mock: HTTPXMock) -> None:
 def test_url_query_params_partial_matching(httpx_mock: HTTPXMock) -> None:
     httpx_mock.add_response(
         url="https://test_url",
-        match_params={"a": ["1", "3"], "b": ANY, "c": "4", "d": ["5", ANY]},
+        match_params={"a": ["1", "3"], "b": ANY, "c": "4", "d": ["5", ANY], "e": [ANY]},
         is_reusable=True,
     )
 
@@ -76,7 +77,7 @@ def test_url_query_params_partial_matching(httpx_mock: HTTPXMock) -> None:
         assert response.content == b""
 
         # Parameters order should not matter
-        response = client.get("https://test_url?b=9&a=1&a=3&c=4&d=5&d=7")
+        response = client.get("https://test_url?b=9&a=1&a=3&c=4&d=5&e=7&d=7")
         assert response.content == b""
 
 
@@ -88,61 +89,18 @@ def test_url_as_pattern_ignoring_query_parameters(httpx_mock: HTTPXMock):
         assert response.content == b""
 
 
-@pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
 def test_url_query_params_with_single_value_list(httpx_mock: HTTPXMock) -> None:
-    httpx_mock.add_response(
-        url="https://test_url",
-        match_params={"a": ["1"]},
-        is_optional=True,
-    )
+    httpx_mock.add_response(url="https://test_url", match_params={"a": ["1"]})
 
     with httpx2.Client() as client:
         response = client.post("https://test_url?a=1")
         assert response.content == b""
 
 
-@pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
-def test_url_query_params_with_non_str_value(httpx_mock: HTTPXMock) -> None:
-    httpx_mock.add_response(
-        url="https://test_url",
-        match_params={"a": 1},
-        is_optional=True,
-    )
-
-    with httpx.Client() as client:
-        with pytest.raises(httpx.TimeoutException) as exception_info:
-            client.post("https://test_url?a=1")
-        assert (
-            str(exception_info.value)
-            == """No response can be found for POST request on https://test_url?a=1 amongst:
-- Match any request on https://test_url with {'a': 1} query parameters"""
-        )
-
-
-@pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
-def test_url_query_params_with_non_str_list_value(httpx_mock: HTTPXMock) -> None:
-    httpx_mock.add_response(
-        url="https://test_url",
-        match_params={"a": [1, "2"]},
-        is_optional=True,
-    )
-
-    with httpx.Client() as client:
-        with pytest.raises(httpx.TimeoutException) as exception_info:
-            client.post("https://test_url?a=1&a=2")
-        assert (
-            str(exception_info.value)
-            == """No response can be found for POST request on https://test_url?a=1&a=2 amongst:
-- Match any request on https://test_url with {'a': [1, '2']} query parameters"""
-        )
-
-
-@pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
 def test_url_query_params_with_non_str_name(httpx_mock: HTTPXMock) -> None:
     httpx_mock.add_response(
         url="https://test_url",
         match_params={1: "1"},
-        is_optional=True,
     )
 
     with httpx2.Client() as client:
@@ -751,7 +709,9 @@ def test_request_with_pattern_in_url(httpx_mock: HTTPXMock) -> None:
         client.get("https://unmatched")
         client.get("https://test_url", headers={"X-Test": "1"})
 
-    assert httpx_mock.get_request(url=re.compile(".*test.*")).headers["x-test"] == "1"
+    request = httpx_mock.get_request(url=re.compile(".*test.*"))
+    assert request is not None
+    assert request.headers["x-test"] == "1"
 
 
 def test_requests_with_pattern_in_url(httpx_mock: HTTPXMock) -> None:
@@ -931,6 +891,8 @@ def test_requests_retrieval(httpx_mock: HTTPXMock) -> None:
     delete_request = httpx_mock.get_request(
         url=httpx2.URL("https://test_url"), method="DELETE"
     )
+    assert delete_request is not None
+    assert delete_request.headers["x-test"] == "test header 4"
 
 
 def test_requests_retrieval_on_same_url(httpx_mock: HTTPXMock) -> None:
@@ -979,6 +941,7 @@ def test_request_retrieval_on_same_method(httpx_mock: HTTPXMock) -> None:
         client.post("https://test_url", headers={"X-TEST": "test header 2"})
 
     request = httpx_mock.get_request(method="GET")
+    assert request is not None
     assert request.headers["x-test"] == "test header 1"
 
 
@@ -1017,6 +980,7 @@ def test_default_request_retrieval(httpx_mock: HTTPXMock) -> None:
         client.post("https://test_url", headers={"X-TEST": "test header 1"})
 
     request = httpx_mock.get_request()
+    assert request is not None
     assert request.headers["x-test"] == "test header 1"
 
 
@@ -1328,7 +1292,7 @@ def test_content_matching(httpx_mock: HTTPXMock) -> None:
         assert response.read() == b""
 
 
-def test_proxy_matching(httpx_mock: HTTPXMock) -> None:
+def test_proxy_matching_with_authentication(httpx_mock: HTTPXMock) -> None:
     httpx_mock.add_response(proxy_url="http://user:pwd@my_other_proxy/")
 
     with httpx2.Client(proxy="http://user:pwd@my_other_proxy") as client:
@@ -2220,14 +2184,14 @@ def test_request_selection_content_matching_with_iterable(
     with httpx2.Client() as client:
         client.put("https://test_url_2", content=stream_content_2())
         client.put("https://test_url_1", content=stream_content_1())
-    assert (
-        httpx_mock.get_request(match_content=b"full content 1").url
-        == "https://test_url_1"
-    )
-    assert (
-        httpx_mock.get_request(match_content=b"full content 2").url
-        == "https://test_url_2"
-    )
+
+    request1 = httpx_mock.get_request(match_content=b"full content 1")
+    assert request1 is not None
+    assert request1.url == "https://test_url_1"
+
+    request2 = httpx_mock.get_request(match_content=b"full content 2")
+    assert request2 is not None
+    assert request2.url == "https://test_url_2"
 
 
 def test_files_matching(httpx_mock: HTTPXMock) -> None:

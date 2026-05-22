@@ -9,9 +9,11 @@ license-files = [
 ]
 authors = [
   { name = "Colin Bounouar", email = "github.coping055@passinbox.com" },
+  { name = "angryfoxx", email = "omarfarukkorkmazz@gmail.com" },
 ]
 maintainers = [
   { name = "Colin Bounouar", email = "github.coping055@passinbox.com" },
+  { name = "angryfoxx", email = "omarfarukkorkmazz@gmail.com" },
 ]
 keywords = [
   "httpx2",
@@ -77,6 +79,7 @@ fail_under = 100
 show_missing = true
 
 [tool.coverage.run]
+branch = true
 patch = ["subprocess"]
 
 [tool.pytest]

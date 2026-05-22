@@ -86,7 +86,7 @@ async def test_url_query_params_partial_matching(httpx_mock: HTTPXMock) -> None:
         assert response.content == b""
 
         # Parameters order should not matter
-        response = await client.get("https://test_url?b=9&a=1&a=3&c=4&d=5&d=7")
+        response = await client.get("https://test_url?b=9&a=1&a=3&c=4&d=5&e=7&d=7")
         assert response.content == b""
 
 
@@ -100,7 +100,6 @@ async def test_url_as_pattern_ignoring_query_parameters(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.asyncio
-@pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
 async def test_url_query_params_with_single_value_list(httpx_mock: HTTPXMock) -> None:
     httpx_mock.add_response(
         url="https://test_url",
@@ -114,45 +113,6 @@ async def test_url_query_params_with_single_value_list(httpx_mock: HTTPXMock) ->
 
 
 @pytest.mark.asyncio
-@pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
-async def test_url_query_params_with_non_str_value(httpx_mock: HTTPXMock) -> None:
-    httpx_mock.add_response(
-        url="https://test_url",
-        match_params={"a": 1},
-        is_optional=True,
-    )
-
-    async with httpx.AsyncClient() as client:
-        with pytest.raises(httpx.TimeoutException) as exception_info:
-            await client.post("https://test_url?a=1")
-        assert (
-            str(exception_info.value)
-            == """No response can be found for POST request on https://test_url?a=1 amongst:
-- Match any request on https://test_url with {'a': 1} query parameters"""
-        )
-
-
-@pytest.mark.asyncio
-@pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
-async def test_url_query_params_with_non_str_list_value(httpx_mock: HTTPXMock) -> None:
-    httpx_mock.add_response(
-        url="https://test_url",
-        match_params={"a": [1, "2"]},
-        is_optional=True,
-    )
-
-    async with httpx.AsyncClient() as client:
-        with pytest.raises(httpx.TimeoutException) as exception_info:
-            await client.post("https://test_url?a=1&a=2")
-        assert (
-            str(exception_info.value)
-            == """No response can be found for POST request on https://test_url?a=1&a=2 amongst:
-- Match any request on https://test_url with {'a': [1, '2']} query parameters"""
-        )
-
-
-@pytest.mark.asyncio
-@pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
 async def test_url_query_params_with_non_str_name(httpx_mock: HTTPXMock) -> None:
     httpx_mock.add_response(
         url="https://test_url",
@@ -766,7 +726,9 @@ async def test_request_with_pattern_in_url(httpx_mock: HTTPXMock) -> None:
         await client.get("https://unmatched")
         await client.get("https://test_url", headers={"X-Test": "1"})
 
-    assert httpx_mock.get_request(url=re.compile(".*test.*")).headers["x-test"] == "1"
+    request = httpx_mock.get_request(url=re.compile(".*test.*"))
+    assert request is not None
+    assert request.headers["x-test"] == "1"
 
 
 @pytest.mark.asyncio
@@ -1012,6 +974,8 @@ async def test_requests_retrieval(httpx_mock: HTTPXMock) -> None:
     delete_request = httpx_mock.get_request(
         url=httpx2.URL("https://test_url"), method="DELETE"
     )
+    assert delete_request is not None
+    assert delete_request.headers["x-test"] == "test header 4"
 
 
 @pytest.mark.asyncio
@@ -1064,6 +1028,7 @@ async def test_request_retrieval_on_same_method(httpx_mock: HTTPXMock) -> None:
         await client.post("https://test_url", headers={"X-TEST": "test header 2"})
 
     request = httpx_mock.get_request(method="GET")
+    assert request is not None
     assert request.headers["x-test"] == "test header 1"
 
 
@@ -1105,6 +1070,7 @@ async def test_default_request_retrieval(httpx_mock: HTTPXMock) -> None:
         await client.post("https://test_url", headers={"X-TEST": "test header 1"})
 
     request = httpx_mock.get_request()
+    assert request is not None
     assert request.headers["x-test"] == "test header 1"
 
 
@@ -1601,7 +1567,7 @@ async def test_content_matching(httpx_mock: HTTPXMock) -> None:
 
 
 @pytest.mark.asyncio
-async def test_proxy_matching(httpx_mock: HTTPXMock) -> None:
+async def test_proxy_matching_with_authentication(httpx_mock: HTTPXMock) -> None:
     httpx_mock.add_response(proxy_url="http://user:pwd@my_other_proxy/")
 
     async with httpx2.AsyncClient(proxy="http://user:pwd@my_other_proxy") as client:
@@ -2539,14 +2505,14 @@ async def test_request_selection_content_matching_with_async_iterable(
     async with httpx2.AsyncClient() as client:
         await client.put("https://test_url_2", content=stream_content_2())
         await client.put("https://test_url_1", content=stream_content_1())
-    assert (
-        httpx_mock.get_request(match_content=b"full content 1").url
-        == "https://test_url_1"
-    )
-    assert (
-        httpx_mock.get_request(match_content=b"full content 2").url
-        == "https://test_url_2"
-    )
+
+    request1 = httpx_mock.get_request(match_content=b"full content 1")
+    assert request1 is not None
+    assert request1.url == "https://test_url_1"
+
+    request2 = httpx_mock.get_request(match_content=b"full content 2")
+    assert request2 is not None
+    assert request2.url == "https://test_url_2"
 
 
 @pytest.mark.asyncio

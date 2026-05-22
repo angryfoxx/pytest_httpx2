@@ -49,14 +49,17 @@ def _url_match(
 
     # Compare query parameters apart as order of parameters should not matter
     received_params = to_params_dict(received.params)
-    if params is None:
-        params = to_params_dict(url_to_match.params)
+    expected_params = to_params_dict(
+        url_to_match.params if params is None else QueryParams(params)
+    )
+    if params:
+        convert_back_mock_any(params, expected_params)
 
     # Remove the query parameters from the original URL to compare everything besides query parameters
     received_url = received.copy_with(query=None)
     url = url_to_match.copy_with(query=None)
 
-    return (received_params == params) and (url == received_url)
+    return (received_params == expected_params) and (url == received_url)
 
 
 def to_params_dict(params: QueryParams) -> dict[str, str | list[str]]:
@@ -275,7 +278,7 @@ class _RequestMatcher:
         if self.headers:
             extra_description.append(f"{self.headers} headers")
         if self.content is not None:
-            extra_description.append(f"{self.content} body")
+            extra_description.append(f"{self.content!r} body")
         if self.json is not None:
             extra_description.append(f"{self.json} json body")
         if self.data is not None:
