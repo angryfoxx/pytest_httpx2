@@ -1,13 +1,19 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "bootstrap-sha": "812116610f7006d33abb7136e01544751d3bc050",
+  "last-release-sha": "812116610f7006d33abb7136e01544751d3bc050",
   "packages": {
     ".": {
       "changelog-path": "CHANGELOG.md",
       "include-component-in-tag": false,
       "package-name": "httpx2-pytest",
-      "release-as": "1.0.0",
-      "release-type": "python"
+      "release-type": "python",
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "pytest_httpx2/version.py"
+        }
+      ]
     }
   },
   "changelog-sections": [
