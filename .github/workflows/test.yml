@@ -15,28 +15,31 @@ jobs:
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           enable-cache: true
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
-        run: uv sync --all-extras --dev --frozen
+        run: uv sync --all-extras --dev
+
       - name: Lint and format
         run: |
           uv run ruff check .
           uv run ruff format --check .
+
       - name: Type check
         run: uv run ty check pytest_httpx2
+
       - name: Test
-        run: uv run pytest --cov-report=xml --junitxml=junit.xml -o junit_family=legacy
-      - name: Upload test results to Codecov
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        run: uv run pytest
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          report_type: test_results
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: angryfoxx/pytest_httpx2
+
       - name: Test packages creation
         run: uv build
