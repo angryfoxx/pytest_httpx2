@@ -60,6 +60,13 @@ testing = [
 [project.entry-points.pytest11]
 pytest_httpx2 = "pytest_httpx2"
 
+[dependency-groups]
+dev = [
+    "build>=1.0",
+    "pre-commit>=4.0",
+    "twine>=6.0",
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["pytest_httpx2*"]
@@ -77,3 +84,6 @@ show_missing = true
 
 [tool.coverage.run]
 patch = ["subprocess"]
+
+[tool.uv]
+default-groups = ["dev"]
