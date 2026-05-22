@@ -8,6 +8,12 @@
 <a href="https://pypi.org/project/httpx2-pytest/"><img alt="Number of downloads" src="https://img.shields.io/pypi/dm/httpx2-pytest"></a>
 </p>
 
+## HTTPX2 mocking options
+
+**httpx2-pytest** (this project) builds on the design and API of **[pytest-httpx](https://github.com/Colin-b/pytest_httpx)** by [Colin Bounouar](https://github.com/Colin-b) — the established pytest plugin for mocking [HTTPX](https://www.python-httpx.org). That project defined the `httpx_mock` fixture and request-matching model many test suites already rely on. This fork carries that approach forward for [HTTPX2](https://github.com/pydantic/httpx2) and aims to stay compatible with pytest-httpx: same fixture names, markers, and `httpx_mock.add_response` / `add_callback` patterns so you can migrate from HTTPX with minimal test changes.
+
+**[pytest-httpx2](https://github.com/lundberg/pytest-httpx2)** by [Erik Lundberg](https://github.com/lundberg) is another HTTPX2 option, built on [respx](https://github.com/lundberg/respx). It is **not** a drop-in replacement for pytest-httpx — the API and configuration differ from Colin’s plugin. Choose it if you prefer respx-style routing; choose **httpx2-pytest** if you want pytest-httpx–like behavior on HTTPX2.
+
 ## About HTTPX2
 
 This project mocks **[HTTPX2](https://github.com/pydantic/httpx2)** — a next-generation HTTP client for Python maintained by [Pydantic](https://pydantic.dev). HTTPX2 continues the work started by the HTTPX community: a requests-compatible API with sync and async clients, HTTP/1.1 and HTTP/2 support, strict timeouts, and full type annotations.
@@ -31,7 +37,7 @@ pip install httpx2-pytest
 ```
 
 > [!NOTE]
-> This fork targets [HTTPX2](https://github.com/pydantic/httpx2) instead of HTTPX. The mocking API and `httpx_mock` fixture name are unchanged for compatibility with existing test suites.
+> This project targets [HTTPX2](https://github.com/pydantic/httpx2) instead of HTTPX, in the spirit of [pytest-httpx](https://github.com/Colin-b/pytest_httpx). The mocking API and `httpx_mock` fixture name are unchanged for compatibility with existing test suites.
 
 Once installed, the `httpx_mock` or `httpx2_mock` [`pytest`](https://docs.pytest.org/en/latest/) fixture will make sure every [`httpx2`](https://httpx2.pydantic.dev) request will be replied to with user provided responses ([unless some hosts are explicitly skipped](#do-not-mock-some-requests)). Both fixtures share the same implementation.
 

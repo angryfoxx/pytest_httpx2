@@ -39,7 +39,7 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-5. The [Release workflow](.github/workflows/release.yml) builds the sdist/wheel, runs `twine check`, and publishes to PyPI.
+5. The [Release workflow](.github/workflows/release.yml) builds the sdist/wheel, runs `twine check`, and publishes with `uv publish`.
 6. Confirm the release: https://pypi.org/project/httpx2-pytest/
 
 ## Local build verification

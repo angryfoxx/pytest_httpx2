@@ -38,7 +38,7 @@ Before creating an issue please make sure that it was not already reported.
 
 #### Code
 
-1) Create a new branch based on `develop` branch.
+1) Create a new branch based on the `dev` branch.
 2) Install [uv](https://docs.astral.sh/uv/) and sync dependencies:
     ```shell
     uv sync --all-extras --dev
@@ -47,10 +47,11 @@ Before creating an issue please make sure that it was not already reported.
     ```shell
     uv run pytest
     ```
-4) Install [pre-commit](https://pre-commit.com) hooks (uses [Tombi](https://tombi-toml.github.io/tombi/) for TOML formatting and linting, [Ruff](https://docs.astral.sh/ruff/) for Python linting/formatting, and [ty](https://docs.astral.sh/ty/) for type checking):
+4) Install [prek](https://prek.j178.dev) Git hooks (config: [`.pre-commit-config.yaml`](.pre-commit-config.yaml); uses [ryl](https://github.com/owenlamont/ryl) for YAML linting, [Tombi](https://tombi-toml.github.io/tombi/) for TOML formatting and linting, [Ruff](https://docs.astral.sh/ruff/) for Python linting/formatting, and [ty](https://docs.astral.sh/ty/) for type checking):
     ```shell
-    uv run pre-commit install
+    prek install --prepare-hooks
     ```
+    Run hooks manually with `prek run --all-files`. Update hook revisions with `prek auto-update`.
 5) Add your changes.
 6) Add at least one [`pytest`](https://doc.pytest.org/en/latest/index.html) test case.
     * Unless it is an internal refactoring request or a documentation update.
@@ -64,7 +65,7 @@ Maintainers: see [RELEASING.md](RELEASING.md) for PyPI trusted publishing and ta
 #### Enter pull request
 
 1) Go to the [*Pull requests* tab](https://github.com/angryfoxx/pytest_httpx2/pulls) and click on the [*New pull request* button](https://github.com/angryfoxx/pytest_httpx2/compare).
-2) *base* should always be set to `develop` and it should be compared to your branch.
+2) *base* should always be set to `dev` and it should be compared to your branch.
 3) Title should be a small sentence describing the request.
 4) The comment should contain as much information as possible
     * Actual behavior (before the new code)
