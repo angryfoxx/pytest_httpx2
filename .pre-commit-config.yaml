@@ -13,7 +13,7 @@ repos:
       - id: end-of-file-fixer
       - id: debug-statements
   - repo: https://github.com/owenlamont/ryl-pre-commit
-    rev: 3768c56155771d7fe56cecf87cd7c3a173867e5d  # frozen: v0.9.2
+    rev: cc78a651c2db5e21c764f92fe366bdd4b26a0db8  # frozen: v0.10.1
     hooks:
       - id: ryl
   - repo: https://github.com/tombi-toml/tombi-pre-commit
